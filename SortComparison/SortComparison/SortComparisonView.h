@@ -7,22 +7,27 @@ class CSortComparisonView : public CView
 {
 private:
     using TimeContainer = std::map<std::string, std::chrono::nanoseconds>;
+    using TimeMeasurement = std::pair<std::string, std::chrono::nanoseconds>;
+    using Time = std::chrono::steady_clock;
     using CRecPtr = std::unique_ptr<CRect>;
+    using CFontPtr = std::unique_ptr<CFont>;
 
-    bool _sortingInProgress = false;
-    bool _isSortingFinished = false;
-    TimeContainer _sortingTimes;
-    CRecPtr _clientRect;
+    bool sorting_in_progress_ = false;
+    bool is_sorting_finished_ = false;
+    CFont* old_font_;
+    CFontPtr new_font_;
+    TimeContainer sorting_times_;
+    CRecPtr client_rect_;
 
-    void drawChartAxis(CDC* pDC);
+    void drawChartAxis(CDC* p_dc);
 
 protected:
     CSortComparisonView() noexcept;
     DECLARE_DYNCREATE(CSortComparisonView)
     DECLARE_MESSAGE_MAP()
-    BOOL OnPreparePrinting(CPrintInfo* pInfo) override;
-    void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo) override;
-    void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) override;
+    BOOL OnPreparePrinting(CPrintInfo* p_info) override;
+    void OnBeginPrinting(CDC* p_dc, CPrintInfo* p_info) override;
+    void OnEndPrinting(CDC* p_dc, CPrintInfo* p_info) override;
 
 public:
 #ifdef _DEBUG
@@ -31,12 +36,12 @@ public:
 #endif
 
     CSortComparisonDoc* GetDocument() const;
-    void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) override;
-    void OnDraw(CDC* pDC) override;
+    void OnPrepareDC(CDC* p_dc, CPrintInfo* p_info) override;
+    void OnDraw(CDC* p_dc) override;
     BOOL PreCreateWindow(CREATESTRUCT& cs) override;
     virtual ~CSortComparisonView();
     afx_msg void OnSortButtonPressed();
-    afx_msg void OnSortButtonUpdate(CCmdUI* pCmdUI);
+    afx_msg void OnSortButtonUpdate(CCmdUI* p_cmd_ui);
 };
 
 #ifndef _DEBUG

@@ -8,6 +8,7 @@
 #include "Sorters.h"
 #include <sstream>
 #include <random>
+#include "CColorRectange.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -24,10 +25,11 @@ BEGIN_MESSAGE_MAP(CSortComparisonView, CView)
 END_MESSAGE_MAP()
 
 
+using namespace Sorters;
+
 CSortComparisonView::CSortComparisonView() noexcept
 {
     // TODO: add construction code here
-
 }
 
 CSortComparisonView::~CSortComparisonView()
@@ -36,17 +38,33 @@ CSortComparisonView::~CSortComparisonView()
 
 void CSortComparisonView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo)
 {
-    GetClientRect(_clientRect.get());
+    GetClientRect(client_rect_.get());
 }
 
 BOOL CSortComparisonView::PreCreateWindow(CREATESTRUCT& cs)
 {
-    _clientRect = std::make_unique<CRect>(0, 0, 0, 0);
+    client_rect_ = std::make_unique<CRect>(0, 0, 0, 0);
+    const auto log_font = new LOGFONT;
+
+    memset(log_font, 0, sizeof(LOGFONT));
+    log_font->lfCharSet = DEFAULT_CHARSET;
+    log_font->lfHeight = 100;
+    log_font->lfWidth = 6;
+    log_font->lfWeight = FW_NORMAL;
+
+    CString font_face_name("Arial");
+    lstrcpyn(log_font->lfFaceName, font_face_name, font_face_name.GetLength() + 1);
+    new_font_ = std::make_unique<CFont>();
+
+    if (!(new_font_->CreatePointFontIndirect(log_font)))
+    {
+        TRACE0("Could Not create font... \n");
+    }
 
     return CView::PreCreateWindow(cs);
 }
 
-void CSortComparisonView::OnDraw(CDC* pDC)
+void CSortComparisonView::OnDraw(CDC* p_dc)
 {
     CSortComparisonDoc* pDoc = GetDocument();
     ASSERT_VALID(pDoc);
@@ -55,9 +73,9 @@ void CSortComparisonView::OnDraw(CDC* pDC)
         return;
     }
 
-    if (_isSortingFinished)
+    if (is_sorting_finished_)
     {
-        drawChartAxis(pDC);
+        drawChartAxis(p_dc);
     }
 }
 
@@ -93,95 +111,172 @@ void CSortComparisonView::Dump(CDumpContext& dc) const
 CSortComparisonDoc* CSortComparisonView::GetDocument() const // non-debug version is inline
 {
     ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CSortComparisonDoc)));
-    return (CSortComparisonDoc*)m_pDocument;
+    return static_cast<CSortComparisonDoc*>(m_pDocument);
 }
 
 #endif //_DEBUG
 
 void CSortComparisonView::OnSortButtonUpdate(CCmdUI* pCmdUI)
 {
-    pCmdUI->Enable(!_sortingInProgress);
+    pCmdUI->Enable(!sorting_in_progress_);
 }
 
 void CSortComparisonView::OnSortButtonPressed()
 {
-    _sortingInProgress = true;
-    _sortingTimes.clear();
-    std::vector<int> randomVector;
-    std::random_device deviceSeed;
+    sorting_in_progress_ = true;
+    sorting_times_.clear();
+    std::vector<int> random_vector;
+    std::random_device device_seed;
 
-    std::mt19937 generator(deviceSeed());
+    std::mt19937 generator(device_seed());
     const std::uniform_int_distribution<> distribution(0, 1000);
     for (auto i = 0; i < 10000; ++i)
     {
-        randomVector.push_back(distribution(generator));
+        random_vector.push_back(distribution(generator));
     }
 
-    auto start = std::chrono::steady_clock::now();
-    Sorters::bubbleSort(randomVector);
-    _sortingTimes.insert(std::pair<std::string, std::chrono::nanoseconds>(
-        Sorters::bubbleSortId, std::chrono::steady_clock::now() - start));
+    auto start = Time::now();
+    bubbleSort(random_vector);
+    sorting_times_.insert(TimeMeasurement(bubbleSortId, Time::now() - start));
 
-    start = std::chrono::steady_clock::now();
-    Sorters::insertionSort(randomVector);
-    _sortingTimes.insert(std::pair<std::string, std::chrono::nanoseconds>(
-        Sorters::insertionSortId, std::chrono::steady_clock::now() - start));
+    start = Time::now();
+    insertionSort(random_vector);
+    sorting_times_.insert(TimeMeasurement(insertionSortId, Time::now() - start));
 
-    start = std::chrono::steady_clock::now();
-    Sorters::halfSort(randomVector);
-    _sortingTimes.insert(std::pair<std::string, std::chrono::nanoseconds>(
-        Sorters::halfSortId, std::chrono::steady_clock::now() - start));
+    start = Time::now();
+    halfSort(random_vector);
+    sorting_times_.insert(TimeMeasurement(halfSortId, Time::now() - start));
 
-    start = std::chrono::steady_clock::now();
-    Sorters::selectionSort(randomVector);
-    _sortingTimes.insert(std::pair<std::string, std::chrono::nanoseconds>(
-        Sorters::selectionSortId, std::chrono::steady_clock::now() - start));
+    start = Time::now();
+    selectionSort(random_vector);
+    sorting_times_.insert(TimeMeasurement(selectionSortId, Time::now() - start));
 
-
-    _isSortingFinished = true;
-    _sortingInProgress = false;
-    GetDocument()->UpdateAllViews(NULL);
+    is_sorting_finished_ = true;
+    sorting_in_progress_ = false;
+    GetDocument()->UpdateAllViews(nullptr);
 }
 
-void CSortComparisonView::drawChartAxis(CDC* pDC)
+void CSortComparisonView::drawChartAxis(CDC* p_dc)
 {
-    const auto topMargin = _clientRect->Height() / 20;
-    const auto leftMargin = _clientRect->Width() / 20;
-    const CPoint yAxisTip(leftMargin, topMargin);
-    const CPoint chartTip(leftMargin, topMargin * 18);
-    const CPoint xAxisTip(leftMargin * 18, topMargin * 18);
-    pDC->MoveTo(yAxisTip); pDC->LineTo(leftMargin - 5, topMargin + 5);
-    pDC->MoveTo(yAxisTip); pDC->LineTo(leftMargin + 5, topMargin + 5);
-    pDC->MoveTo(yAxisTip); pDC->LineTo(chartTip);
-    pDC->MoveTo(chartTip); pDC->LineTo(xAxisTip);
+    const auto top_margin = client_rect_->Height() / 20;
+    const auto left_margin = client_rect_->Width() / 20;
 
-    const auto bubbleTime = _sortingTimes[Sorters::bubbleSortId].count() / 10e7;
-    const auto insertionTime = _sortingTimes[Sorters::insertionSortId].count() / 10e7;
-    const auto selectioTime = _sortingTimes[Sorters::selectionSortId].count() / 10e7;
-    const auto halfTime = _sortingTimes[Sorters::halfSortId].count() / 10e7;
+    const CPoint y_axis_tip(left_margin, top_margin);
+    const CPoint chart_tip(left_margin, top_margin * 18);
+    const CPoint x_axis_tip(left_margin * 18, top_margin * 18);
 
-    auto bubbleChart = CRect(leftMargin + _clientRect->Width() / 20,
-        topMargin * 18 - bubbleTime,
-        leftMargin + 3 * (_clientRect->Width() / 20),
-        topMargin * 18);
+    p_dc->MoveTo(y_axis_tip);
+    p_dc->LineTo(left_margin - 5, top_margin + 5);
+    p_dc->MoveTo(y_axis_tip);
+    p_dc->LineTo(left_margin + 5, top_margin + 5);
+    p_dc->MoveTo(y_axis_tip);
 
-    auto insertionChart = CRect(leftMargin + 4 * _clientRect->Width() / 20,
-        topMargin * 18 - insertionTime,
-        leftMargin + 6 * (_clientRect->Width() / 20),
-        topMargin * 18);
+    p_dc->TextOut(left_margin - 25, top_margin * 2.5f, CString("3.5"));
+    p_dc->MoveTo(left_margin, top_margin * 2.5f);
+    p_dc->LineTo(left_margin * 18, top_margin * 2.5f);
 
-    auto selectionChart = CRect(leftMargin + 7 * _clientRect->Width() / 20,
-        topMargin * 18 - selectioTime,
-        leftMargin + 9 * (_clientRect->Width() / 20),
-        topMargin * 18);
+    p_dc->TextOut(left_margin - 25, top_margin * 4.5f, CString("3.5"));
+    p_dc->MoveTo(left_margin, top_margin * 4.5f);
+    p_dc->LineTo(left_margin * 18, top_margin * 4.5f);
 
-    auto haltChart = CRect(leftMargin + 10 * _clientRect->Width() / 20,
-        topMargin * 18 - halfTime,
-        leftMargin + 12 * (_clientRect->Width() / 20),
-        topMargin * 18);
+    p_dc->TextOut(left_margin - 25, top_margin * 6.5f, CString("3.0"));
+    p_dc->MoveTo(left_margin, top_margin * 6.5f);
+    p_dc->LineTo(left_margin * 18, top_margin * 6.5f);
 
-    pDC->FillSolidRect(bubbleChart, RGB(100, 100, 0));
-    pDC->FillSolidRect(insertionChart, RGB(100, 200, 0));
-    pDC->FillSolidRect(selectionChart, RGB(100, 100, 200));
-    pDC->FillSolidRect(haltChart, RGB(100, 0, 0));
+    p_dc->TextOut(left_margin - 25, top_margin * 8.5f, CString("2.5"));
+    p_dc->MoveTo(left_margin, top_margin * 8.5f);
+    p_dc->LineTo(left_margin * 18, top_margin * 8.5f);
+
+    p_dc->TextOut(left_margin - 25, top_margin * 10.5f, CString("2.0"));
+    p_dc->MoveTo(left_margin, top_margin * 10.5f);
+    p_dc->LineTo(left_margin * 18, top_margin * 10.5f);
+
+    p_dc->TextOut(left_margin - 25, top_margin * 12.5f, CString("1.5"));
+    p_dc->MoveTo(left_margin, top_margin * 12.5f);
+    p_dc->LineTo(left_margin * 18, top_margin * 12.5f);
+
+    p_dc->TextOut(left_margin - 25, top_margin * 14.5f, CString("1.0"));
+    p_dc->MoveTo(left_margin, top_margin * 14.5f);
+    p_dc->LineTo(left_margin * 18, top_margin * 14.5f);
+
+    p_dc->TextOut(left_margin - 25, top_margin * 16.5f, CString("0.5"));
+    p_dc->MoveTo(left_margin, top_margin * 16.5f);
+    p_dc->LineTo(left_margin * 18, top_margin * 16.5f);
+
+    p_dc->TextOut(left_margin - 25, top_margin * 18, CString("0.0"));
+    p_dc->MoveTo(y_axis_tip);
+    p_dc->LineTo(chart_tip);
+    p_dc->MoveTo(chart_tip);
+    p_dc->LineTo(x_axis_tip);
+
+
+    p_dc->TextOut(left_margin * 7, top_margin, CString("Sort Comparision"));
+
+    old_font_ = p_dc->SelectObject(new_font_.get());
+    p_dc->TextOut(left_margin - 25, top_margin, CString("y(t)"));
+
+    const auto bubble_time = sorting_times_[bubbleSortId].count() / 10e7;
+    const auto insertion_time = sorting_times_[insertionSortId].count() / 10e7;
+    const auto selection_time = sorting_times_[selectionSortId].count() / 10e7;
+    const auto half_time = sorting_times_[halfSortId].count() / 10e7;
+
+    auto bubble_chart = CRect(left_margin + client_rect_->Width() / 20,
+        top_margin * 18 - bubble_time,
+        left_margin + 3 * (client_rect_->Width() / 20),
+        top_margin * 18);
+
+    auto insertion_chart = CRect(left_margin + 4 * client_rect_->Width() / 20,
+        top_margin * 18 - insertion_time,
+        left_margin + 6 * (client_rect_->Width() / 20),
+        top_margin * 18);
+
+    auto selection_chart = CRect(left_margin + 7 * client_rect_->Width() / 20,
+        top_margin * 18 - selection_time,
+        left_margin + 9 * (client_rect_->Width() / 20),
+        top_margin * 18);
+
+    auto half_chart = CRect(left_margin + 10 * client_rect_->Width() / 20,
+        top_margin * 18 - half_time,
+        left_margin + 12 * (client_rect_->Width() / 20),
+        top_margin * 18);
+
+    auto bubble_chart_ccrec = std::make_unique<CColorRectange>(bubble_chart, 1, BLACK, RED);
+    auto insertion_chart_ccrec = std::make_unique<CColorRectange>(insertion_chart, 1, BLACK, GREEN);
+    auto selection_chart_ccrec = std::make_unique<CColorRectange>(selection_chart, 1, BLACK, BLUE);
+    auto half_chart_ccrec = std::make_unique<CColorRectange>(half_chart, 1, BLACK, ORANGE);
+
+    bubble_chart_ccrec->paintRect(p_dc);
+    insertion_chart_ccrec->paintRect(p_dc);
+    selection_chart_ccrec->paintRect(p_dc);
+    half_chart_ccrec->paintRect(p_dc);
+
+    old_font_ = p_dc->SelectObject(old_font_);
+
+    p_dc->TextOut(left_margin + client_rect_->Width() / 20,
+        top_margin * 16 - bubble_time,
+        CString("Bubble Sort"));
+    p_dc->TextOut(left_margin + 4 * client_rect_->Width() / 20,
+        top_margin * 16 - insertion_time,
+        CString("Insert. Sort"));
+    p_dc->TextOut(left_margin + 7 * client_rect_->Width() / 20,
+        top_margin * 16 - selection_time,
+        CString("Select. Sort"));
+    p_dc->TextOut(left_margin + 10 * client_rect_->Width() / 20,
+        top_margin * 16 - half_time,
+        CString("Half Sort"));
+
+    old_font_ = p_dc->SelectObject(new_font_.get());
+
+    p_dc->TextOut(left_margin + client_rect_->Width() / 20,
+        top_margin * 17 - bubble_time,
+        CString(std::to_string(bubble_time / 100.f).c_str()));
+    p_dc->TextOut(left_margin + 4 * client_rect_->Width() / 20,
+        top_margin * 17 - insertion_time,
+        CString(std::to_string(insertion_time / 100.f).c_str()));
+    p_dc->TextOut(left_margin + 7 * client_rect_->Width() / 20,
+        top_margin * 17 - selection_time,
+        CString(std::to_string(selection_time / 100.f).c_str()));
+    p_dc->TextOut(left_margin + 10 * client_rect_->Width() / 20,
+        top_margin * 17 - half_time,
+        CString(std::to_string(half_time / 100.f).c_str()));
 }

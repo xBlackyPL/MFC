@@ -1,46 +1,49 @@
 ﻿#include "stdafx.h"
 #include "CColorRectange.h"
 
-CColorRectange::CColorRectange(CRect* pRect, int penWidth, COLORREF penColor, COLORREF bkgColor)
+CColorRectange::CColorRectange(CRect* p_rect, const int pen_width, const COLORREF pen_color, const COLORREF bkg_color) :
+    CRect(p_rect)
 {
-    CreateAttr(penWidth, penColor, bkgColor);
+    create_attr(pen_width, pen_color, bkg_color);
 }
 
-CColorRectange::CColorRectange(const CRect&, int penWidth, COLORREF penColor, COLORREF bkgColor)
+CColorRectange::CColorRectange(const CRect& p_rect, const int pen_width, const COLORREF pen_color, const COLORREF bkg_color) :
+    CRect(p_rect)
 {
-    CreateAttr(penWidth, penColor, bkgColor);
+    create_attr(pen_width, pen_color, bkg_color);
 }
 
-CColorRectange::CColorRectange(const CPoint&, const CPoint&, int penWidth, COLORREF penColor, COLORREF bkgColor)
+CColorRectange::CColorRectange(const CPoint& left_top, const CPoint& right_bottom, const int pen_width,
+    const COLORREF pen_color, const COLORREF bkg_color)
 {
-    CreateAttr(penWidth, penColor, bkgColor);
+    create_attr(pen_width, pen_color, bkg_color);
 }
 
-CColorRectange::CColorRectange(const CPoint&, const CSize&, int penWidth, COLORREF penColor, COLORREF bkgColor)
+CColorRectange::CColorRectange(const CPoint& left_top, const CSize& size, const int pen_width, const COLORREF pen_color, const COLORREF bkg_color) :
+    CRect(left_top, size)
 {
-    CreateAttr(penWidth, penColor, bkgColor);
+    create_attr(pen_width, pen_color, bkg_color);
 }
 
-CColorRectange::~CColorRectange()
+void CColorRectange::paintRect(CDC* p_dc)
 {
+    const auto p_old_pen = p_dc->SelectObject(old_pen_.get());
+    const auto p_old_brush = p_dc->SelectObject(old_brush_.get());
+
+    p_dc->Rectangle(static_cast<CRect*>(this));
+
+    p_dc->SelectObject(p_old_pen);
+    p_dc->SelectObject(p_old_brush);
 }
 
-void CColorRectange::PaintRect(CDC* pDC)
-{
-}
-
-void CColorRectange::CreateAttr(int penWidth, COLORREF penColor, COLORREF bkgColor)
+void CColorRectange::create_attr(const int pen_width, const COLORREF pen_color, const COLORREF bkg_color)
 {
     initAttr();
-    newAttr(penWidth, penColor, bkgColor);
+    newAttr(pen_width, pen_color, bkg_color);
 }
 
-void CColorRectange::initAttr()
+void CColorRectange::newAttr(int pen_width, COLORREF pen_color, COLORREF bkg_color)
 {
-}
-
-void CColorRectange::newAttr(int penWidth, COLORREF penColor, COLORREF bkgColor)
-{
-    m_pPen = std::make_unique<CPen>(PS_SOLID, penWidth, penColor);
-    m_pBrush = std::make_unique<CBrush>(bkgColor);
+    old_pen_ = std::make_unique<CPen>(PS_SOLID, pen_width, pen_color);
+    old_brush_ = std::make_unique<CBrush>(bkg_color);
 }
