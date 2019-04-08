@@ -3,24 +3,24 @@
 class CMainFrame : public CFrameWnd
 {
 private:
-	static UINT m_buttonsIDs[];
+	static UINT buttons_ids_[];
 
 protected:
 	CMainFrame() noexcept;
 	DECLARE_DYNCREATE(CMainFrame)
-	CToolBar          m_wndToolBar;
-	CStatusBar        m_wndStatusBar;
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	CToolBar          window_tool_bar;
+	CStatusBar        window_status_bar;
+	afx_msg int OnCreate(LPCREATESTRUCT creation_structure);
 	DECLARE_MESSAGE_MAP()
 
 public:
-	void ResetButton(bool btn);
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	void ResetButton(bool button);
+	virtual BOOL PreCreateWindow(CREATESTRUCT& creation_struct);
 	virtual ~CMainFrame();
 	
 #ifdef _DEBUG
 	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& device_context) const;
 #endif
 };
 

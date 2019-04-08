@@ -21,7 +21,7 @@ static UINT indicators[] =
 	ID_INDICATOR_SCRL,
 };
 
-UINT CMainFrame::m_buttonsIDs[] =
+UINT CMainFrame::buttons_ids_[] =
 {
 	ID_BUTTON_PLUS,
 	ID_BUTTON_MINUS,
@@ -29,68 +29,57 @@ UINT CMainFrame::m_buttonsIDs[] =
 	ID_APP_ABOUT,
 };
 
-CMainFrame::CMainFrame() noexcept
-{
-}
+CMainFrame::CMainFrame() noexcept { }
+CMainFrame::~CMainFrame() = default;
 
-CMainFrame::~CMainFrame()
+int CMainFrame::OnCreate(const LPCREATESTRUCT creation_structure)
 {
-}
-
-int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
-{
-	if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
+	if (CFrameWnd::OnCreate(creation_structure) == -1)
+	{
 		return -1;
-
-	if (!m_wndToolBar.Create(this) ||
-		!m_wndToolBar.LoadBitmap(IDR_SDIBALLSBAR) ||
-		!m_wndToolBar.SetButtons(m_buttonsIDs, sizeof(m_buttonsIDs) / sizeof(UINT)))
+	}
+	if (!window_tool_bar.Create(this) ||
+		!window_tool_bar.LoadBitmap(IDR_SDIBALLSBAR) ||
+		!window_tool_bar.SetButtons(buttons_ids_, sizeof(buttons_ids_) / sizeof(UINT)))
 	{
 		TRACE0("Failed to create toolbar\n");
 		return -1;
 	}
 
-	CToolBarCtrl& BarCtrl = m_wndToolBar.GetToolBarCtrl();
-	BarCtrl.SetBitmapSize(CSize(59, 31));
-	BarCtrl.SetButtonSize(CSize(59,31));
+	auto& bar_ctrl = window_tool_bar.GetToolBarCtrl();
+	bar_ctrl.SetBitmapSize(CSize(59, 31));
+	bar_ctrl.SetButtonSize(CSize(59,31));
 
-	if (!m_wndStatusBar.Create(this))
+	if (!window_status_bar.Create(this))
 	{
 		TRACE0("Failed to create status bar\n");
 		return -1; 
 	}
-	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
-	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+	window_status_bar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
+	window_tool_bar.EnableDocking(CBRS_ALIGN_ANY);
 	EnableDocking(CBRS_ALIGN_ANY);
-	DockControlBar(&m_wndToolBar);
+	DockControlBar(&window_tool_bar);
 	return 0;
 }
 
-void CMainFrame::ResetButton(bool btn)
+void CMainFrame::ResetButton(const bool button)
 {
-	int buttonIx = sizeof(m_buttonsIDs) / sizeof(UINT);
-	if (btn)
+	const int button_id = sizeof(buttons_ids_) / sizeof(UINT);
+	if (button)
 	{
-		m_wndToolBar.SetButtonInfo(2, ID_BUTTON_START, TBBS_BUTTON, buttonIx);
+		window_tool_bar.SetButtonInfo(2, ID_BUTTON_START, TBBS_BUTTON, button_id);
 	}
 	else
 	{
-		m_wndToolBar.SetButtonInfo(2, ID_BUTTON_START, TBBS_BUTTON, 2);
+		window_tool_bar.SetButtonInfo(2, ID_BUTTON_START, TBBS_BUTTON, 2);
 	}
-	m_wndToolBar.Invalidate();
+	window_tool_bar.Invalidate();
 }
 
-BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
+BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& creation_struct)
 {
-	if( !CFrameWnd::PreCreateWindow(cs) )
-		return FALSE;
-	// TODO: Modify the Window class or styles here by modifying
-	//  the CREATESTRUCT cs
-
-	return TRUE;
+	return CFrameWnd::PreCreateWindow(creation_struct);
 }
-
-// CMainFrame diagnostics
 
 #ifdef _DEBUG
 void CMainFrame::AssertValid() const
@@ -98,12 +87,8 @@ void CMainFrame::AssertValid() const
 	CFrameWnd::AssertValid();
 }
 
-void CMainFrame::Dump(CDumpContext& dc) const
+void CMainFrame::Dump(CDumpContext& device_context) const
 {
-	CFrameWnd::Dump(dc);
+	CFrameWnd::Dump(device_context);
 }
 #endif //_DEBUG
-
-
-// CMainFrame message handlers
-

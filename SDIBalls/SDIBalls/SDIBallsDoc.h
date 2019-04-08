@@ -3,7 +3,7 @@
 
 class CSDIBallsDoc : public CDocument
 {
-protected: // create from serialization only
+protected:
 	CSDIBallsDoc() noexcept;
 	DECLARE_DYNCREATE(CSDIBallsDoc)
 	DECLARE_MESSAGE_MAP()
@@ -14,7 +14,7 @@ protected: // create from serialization only
 
 public:
 	virtual BOOL OnNewDocument();
-	virtual void Serialize(CArchive& ar);
+	virtual void Serialize(CArchive& archive);
 #ifdef SHARED_HANDLERS
 	virtual void InitializeSearchContent();
 	virtual void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds);
@@ -23,6 +23,6 @@ public:
 	virtual ~CSDIBallsDoc();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& device_context) const;
 #endif
 };

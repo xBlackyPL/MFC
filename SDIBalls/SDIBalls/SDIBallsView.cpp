@@ -49,9 +49,9 @@ CSDIBallsView::~CSDIBallsView()
 	delete m_pBall;
 }
 
-BOOL CSDIBallsView::PreCreateWindow(CREATESTRUCT& cs)
+BOOL CSDIBallsView::PreCreateWindow(CREATESTRUCT& creation_structure)
 {
-	return CView::PreCreateWindow(cs);
+	return CView::PreCreateWindow(creation_structure);
 }
 
 void CSDIBallsView::OnInitialUpdate()
@@ -63,7 +63,7 @@ void CSDIBallsView::OnInitialUpdate()
 	GetClientRect(m_pClientRect);
 }
 
-void CSDIBallsView::OnDraw(CDC* pDC)
+void CSDIBallsView::OnDraw(CDC* device_context)
 {
 	CSDIBallsDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
@@ -72,11 +72,11 @@ void CSDIBallsView::OnDraw(CDC* pDC)
 
 	CDC memDC;
 
-	bool b = memDC.CreateCompatibleDC(pDC);
+	bool b = memDC.CreateCompatibleDC(device_context);
 	ASSERT(b);
 
 	CBitmap bmp;
-	b = bmp.CreateCompatibleBitmap(pDC, m_pClientRect->Width(), m_pClientRect->Height());
+	b = bmp.CreateCompatibleBitmap(device_context, m_pClientRect->Width(), m_pClientRect->Height());
 	ASSERT(b);
 	CBitmap* pOldBitmap = memDC.SelectObject(&bmp);
 	memDC.FillSolidRect(m_pClientRect, RGB(255, 255, 255));
@@ -92,7 +92,7 @@ void CSDIBallsView::OnDraw(CDC* pDC)
 	memDC.SelectObject(pOldPen);
 	memDC.SelectObject(pOldBrush);
 
-	b = pDC->BitBlt(0, 0, m_pClientRect->Width(), m_pClientRect->Height(), &memDC, 0, 0, SRCCOPY);
+	b = device_context->BitBlt(0, 0, m_pClientRect->Width(), m_pClientRect->Height(), &memDC, 0, 0, SRCCOPY);
 	ASSERT(b);
 
 	memDC.SelectObject(pOldBitmap);
@@ -101,14 +101,14 @@ void CSDIBallsView::OnDraw(CDC* pDC)
 
 	//CBrush* pBrush = new CBrush(RGB(255, 0, 0));
 	//CPen* pen = new CPen(PS_SOLID, 3, RGB(255, 0, 0));
-	//CPen* oldPen = pDC->SelectObject(pen);
-	//CBrush* pOldBrush = pDC->SelectObject(pBrush);
+	//CPen* oldPen = device_context->SelectObject(pen);
+	//CBrush* pOldBrush = device_context->SelectObject(pBrush);
 	//
 
-	//pDC->Ellipse(m_pBall);
+	//device_context->Ellipse(m_pBall);
 
-	//pDC->SelectObject(oldPen);
-	//pDC->SelectObject(pOldBrush);
+	//device_context->SelectObject(oldPen);
+	//device_context->SelectObject(pOldBrush);
 	delete pBrush;
 	delete pPen;
 }
@@ -137,9 +137,9 @@ void CSDIBallsView::OnButtonPlus()
 	m_bJaponia = true;
 }
 
-void CSDIBallsView::OnUpdateButtonPlus(CCmdUI *pCmdUI)
+void CSDIBallsView::OnUpdateButtonPlus(CCmdUI *cmd_ui)
 {
-	pCmdUI->SetCheck(m_bJamajka);
+	cmd_ui->SetCheck(m_bJamajka);
 }
 
 void CSDIBallsView::OnButtonMinus()
@@ -148,9 +148,9 @@ void CSDIBallsView::OnButtonMinus()
 	m_bJaponia = false;
 }
 
-void CSDIBallsView::OnUpdateButtonMinus(CCmdUI *pCmdUI)
+void CSDIBallsView::OnUpdateButtonMinus(CCmdUI *cmd_ui)
 {
-	pCmdUI->SetCheck(m_bJaponia);
+	cmd_ui->SetCheck(m_bJaponia);
 }
 
 void CSDIBallsView::OnButtonStart()
@@ -160,7 +160,7 @@ void CSDIBallsView::OnButtonStart()
 	pFrame->ResetButton(m_bStart);
 }
 
-void CSDIBallsView::OnUpdateButtonStart(CCmdUI *pCmdUI)
+void CSDIBallsView::OnUpdateButtonStart(CCmdUI *cmd_ui)
 {
 }
 
@@ -172,7 +172,7 @@ void CSDIBallsView::OnDestroy()
 	// TODO: Dodaj tutaj swój kod procedury obs³ugi komunikatów
 }
 
-void CSDIBallsView::OnTimer(UINT_PTR nIDEvent)
+void CSDIBallsView::OnTimer(UINT_PTR event_id)
 {
 
 	if (m_bStart)
@@ -181,14 +181,14 @@ void CSDIBallsView::OnTimer(UINT_PTR nIDEvent)
 		Invalidate(false);
 	}
 
-	CView::OnTimer(nIDEvent);
+	CView::OnTimer(event_id);
 }
 
-BOOL CSDIBallsView::OnEraseBkgnd(CDC* pDC)
+BOOL CSDIBallsView::OnEraseBackground(CDC* device_context)
 {
 	// TODO: Dodaj tutaj swój kod procedury obs³ugi komunikatów i/lub wywo³aj domyœlny
 	return 1;
-	//return CView::OnEraseBkgnd(pDC);
+	//return CView::OnEraseBackground(device_context);
 }
 
 /*

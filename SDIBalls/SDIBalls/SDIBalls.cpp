@@ -1,7 +1,3 @@
-
-// Zaj4.cpp : Defines the class behaviors for the application.
-//
-
 #include "stdafx.h"
 #include "afxwinappex.h"
 #include "afxdialogex.h"
@@ -18,7 +14,6 @@
 
 BEGIN_MESSAGE_MAP(CSDIBallsApp, CWinApp)
 	ON_COMMAND(ID_APP_ABOUT, &CSDIBallsApp::OnAppAbout)
-	// Standard file based document commands
 	ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
 END_MESSAGE_MAP()
@@ -31,7 +26,7 @@ CSDIBallsApp::CSDIBallsApp() noexcept
 	System::Windows::Forms::Application::SetUnhandledExceptionMode(System::Windows::Forms::UnhandledExceptionMode::ThrowException);
 #endif
 
-	SetAppID(_T("Zaj4.AppID.NoVersion"));
+	SetAppID(_T("SDIBalls.AppID.NoVersion"));
 
 }
 
@@ -39,20 +34,13 @@ CSDIBallsApp app;
 
 BOOL CSDIBallsApp::InitInstance()
 {
-	// InitCommonControlsEx() is required on Windows XP if an application
-	// manifest specifies use of ComCtl32.dll version 6 or later to enable
-	// visual styles.  Otherwise, any window creation will fail.
-	INITCOMMONCONTROLSEX InitCtrls;
-	InitCtrls.dwSize = sizeof(InitCtrls);
-	// Set this to include all the common control classes you want to use
-	// in your application.
-	InitCtrls.dwICC = ICC_WIN95_CLASSES;
-	InitCommonControlsEx(&InitCtrls);
+	INITCOMMONCONTROLSEX init_ctrl;
+	init_ctrl.dwSize = sizeof(init_ctrl);
+	init_ctrl.dwICC = ICC_WIN95_CLASSES;
+	InitCommonControlsEx(&init_ctrl);
 
 	CWinApp::InitInstance();
 
-
-	// Initialize OLE libraries
 	if (!AfxOleInit())
 	{
 		AfxMessageBox(IDP_OLE_INIT_FAILED);
@@ -62,46 +50,28 @@ BOOL CSDIBallsApp::InitInstance()
 	AfxEnableControlContainer();
 
 	EnableTaskbarInteraction(FALSE);
-
-	// AfxInitRichEdit2() is required to use RichEdit control
-	// AfxInitRichEdit2();
-
-	// Standard initialization
-	// If you are not using these features and wish to reduce the size
-	// of your final executable, you should remove from the following
-	// the specific initialization routines you do not need
-	// Change the registry key under which our settings are stored
-	// TODO: You should modify this string to be something appropriate
-	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
-	LoadStdProfileSettings(4);  // Load standard INI file options (including MRU)
+	LoadStdProfileSettings(4);
 
-
-	// Register the application's document templates.  Document templates
-	//  serve as the connection between documents, frame windows and views
-	CSingleDocTemplate* pDocTemplate;
-	pDocTemplate = new CSingleDocTemplate(
+	const auto doc_template = new CSingleDocTemplate(
 		IDR_MAINFRAME,
 		RUNTIME_CLASS(CSDIBallsDoc),
-		RUNTIME_CLASS(CMainFrame),       // main SDI frame window
+		RUNTIME_CLASS(CMainFrame), // main SDI frame window
 		RUNTIME_CLASS(CSDIBallsView));
-	if (!pDocTemplate)
+	if (!doc_template)
+	{
 		return FALSE;
-	AddDocTemplate(pDocTemplate);
+	}
+	AddDocTemplate(doc_template);
+	
+	CCommandLineInfo cmd_info;
+	ParseCommandLine(cmd_info);
 
-
-	// Parse command line for standard shell commands, DDE, file open
-	CCommandLineInfo cmdInfo;
-	ParseCommandLine(cmdInfo);
-
-
-
-	// Dispatch commands specified on the command line.  Will return FALSE if
-	// app was launched with /RegServer, /Register, /Unregserver or /Unregister.
-	if (!ProcessShellCommand(cmdInfo))
+	if (!ProcessShellCommand(cmd_info))
+	{
 		return FALSE;
+	}
 
-	// The one and only window has been initialized, so show and update it
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
 	return TRUE;
@@ -109,55 +79,37 @@ BOOL CSDIBallsApp::InitInstance()
 
 int CSDIBallsApp::ExitInstance()
 {
-	//TODO: handle additional resources you may have added
 	AfxOleTerm(FALSE);
-
 	return CWinApp::ExitInstance();
 }
 
-// CSDIBallsApp message handlers
-
-
-// CAboutDlg dialog used for App About
-
 class CAboutDlg : public CDialogEx
 {
+protected:
+	virtual void DoDataExchange(CDataExchange* data_exchange);
+	DECLARE_MESSAGE_MAP()
+
 public:
 	CAboutDlg() noexcept;
-
-// Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ABOUTBOX };
-#endif
-
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
-// Implementation
-protected:
-	DECLARE_MESSAGE_MAP()
+#endif	
 };
 
 CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
 {
 }
 
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
+void CAboutDlg::DoDataExchange(CDataExchange* data_exchange)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDialogEx::DoDataExchange(data_exchange);
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
-// App command to run the dialog
 void CSDIBallsApp::OnAppAbout()
 {
-	CAboutDlg aboutDlg;
-	aboutDlg.DoModal();
+	CAboutDlg about_dlg;
+	about_dlg.DoModal();
 }
-
-// CSDIBallsApp message handlers
-
-
-

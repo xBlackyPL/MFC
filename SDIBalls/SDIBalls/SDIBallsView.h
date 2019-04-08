@@ -1,13 +1,10 @@
 #pragma once
 
-
 class CSDIBallsView : public CView
 {
-protected: // create from serialization only
+protected:
 	CSDIBallsView() noexcept;
 	DECLARE_DYNCREATE(CSDIBallsView)
-
-
 	bool m_bJamajka;
 	bool m_bStart;
 	bool m_bJaponia;
@@ -21,8 +18,8 @@ protected: // create from serialization only
 public:
 	CSDIBallsDoc* GetDocument() const;
 
-	void OnDraw(CDC* pDC) override;
-	BOOL PreCreateWindow(CREATESTRUCT& cs) override;
+	void OnDraw(CDC* device_context) override;
+	BOOL PreCreateWindow(CREATESTRUCT& creation_structure) override;
 	void OnInitialUpdate() override; 
 	virtual ~CSDIBallsView();
 
@@ -32,17 +29,17 @@ public:
 #endif
 
 	afx_msg void OnButtonPlus();
-	afx_msg void OnUpdateButtonPlus(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateButtonPlus(CCmdUI *cmd_ui);
 	afx_msg void OnButtonMinus();
-	afx_msg void OnUpdateButtonMinus(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateButtonMinus(CCmdUI *cmd_ui);
 	afx_msg void OnButtonStart();
-	afx_msg void OnUpdateButtonStart(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateButtonStart(CCmdUI *cmd_ui);
 	afx_msg void OnDestroy();
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnTimer(UINT_PTR event_id);
+	afx_msg BOOL OnEraseBackground(CDC* device_context);
 };
 
-#ifndef _DEBUG  // debug version in Zaj4View.cpp
+#ifndef _DEBUG
 inline CSDIBallsDoc* CSDIBallsView::GetDocument() const
    { return reinterpret_cast<CSDIBallsDoc*>(m_pDocument); }
 #endif

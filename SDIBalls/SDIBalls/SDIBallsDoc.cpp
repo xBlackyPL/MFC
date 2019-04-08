@@ -52,9 +52,9 @@ BOOL CSDIBallsDoc::OnNewDocument()
 
 // CSDIBallsDoc serialization
 
-void CSDIBallsDoc::Serialize(CArchive& ar)
+void CSDIBallsDoc::Serialize(CArchive& archive)
 {
-	if (ar.IsStoring())
+	if (archive.IsStoring())
 	{
 		// TODO: add storing code here
 	}
@@ -126,9 +126,9 @@ void CSDIBallsDoc::AssertValid() const
 	CDocument::AssertValid();
 }
 
-void CSDIBallsDoc::Dump(CDumpContext& dc) const
+void CSDIBallsDoc::Dump(CDumpContext& device_context) const
 {
-	CDocument::Dump(dc);
+	CDocument::Dump(device_context);
 }
 #endif //_DEBUG
 
