@@ -9,8 +9,8 @@ private:
 	BallsCore::BallsHandler ball_handler_;
 	UINT timer_id_;
 	bool is_start_button_clicked_;
-	bool minus_enable_{ false };
-	bool plus_enable_{ true };
+	bool minus_enable_{false};
+	bool plus_enable_{true};
 
 protected:
 	CSDIBallsView() noexcept;
