@@ -13,9 +13,9 @@
 
 
 BEGIN_MESSAGE_MAP(CSDIBallsApp, CWinApp)
-	ON_COMMAND(ID_APP_ABOUT, &CSDIBallsApp::OnAppAbout)
-	ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
-	ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
+		ON_COMMAND(ID_APP_ABOUT, &CSDIBallsApp::OnAppAbout)
+		ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
+		ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
 END_MESSAGE_MAP()
 
 
@@ -27,7 +27,6 @@ CSDIBallsApp::CSDIBallsApp() noexcept
 #endif
 
 	SetAppID(_T("SDIBalls.AppID.NoVersion"));
-
 }
 
 CSDIBallsApp app;
@@ -56,14 +55,14 @@ BOOL CSDIBallsApp::InitInstance()
 	const auto doc_template = new CSingleDocTemplate(
 		IDR_MAINFRAME,
 		RUNTIME_CLASS(CSDIBallsDoc),
-		RUNTIME_CLASS(CMainFrame), // main SDI frame window
+		RUNTIME_CLASS(CMainFrame),
 		RUNTIME_CLASS(CSDIBallsView));
 	if (!doc_template)
 	{
 		return FALSE;
 	}
 	AddDocTemplate(doc_template);
-	
+
 	CCommandLineInfo cmd_info;
 	ParseCommandLine(cmd_info);
 
@@ -86,14 +85,14 @@ int CSDIBallsApp::ExitInstance()
 class CAboutDlg : public CDialogEx
 {
 protected:
-	virtual void DoDataExchange(CDataExchange* data_exchange);
-	DECLARE_MESSAGE_MAP()
+	void DoDataExchange(CDataExchange* data_exchange) override;
+DECLARE_MESSAGE_MAP()
 
 public:
 	CAboutDlg() noexcept;
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ABOUTBOX };
-#endif	
+#endif
 };
 
 CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)

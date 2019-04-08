@@ -7,21 +7,19 @@ private:
 
 protected:
 	CMainFrame() noexcept;
-	DECLARE_DYNCREATE(CMainFrame)
-	CToolBar          window_tool_bar;
-	CStatusBar        window_status_bar;
+DECLARE_DYNCREATE(CMainFrame)
+	CToolBar window_tool_bar;
+	CStatusBar window_status_bar;
 	afx_msg int OnCreate(LPCREATESTRUCT creation_structure);
-	DECLARE_MESSAGE_MAP()
+DECLARE_MESSAGE_MAP()
 
 public:
 	void ResetButton(bool button);
-	virtual BOOL PreCreateWindow(CREATESTRUCT& creation_struct);
+	BOOL PreCreateWindow(CREATESTRUCT& creation_struct) override;
 	virtual ~CMainFrame();
-	
+
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& device_context) const;
+	void AssertValid() const override;
+	void Dump(CDumpContext& device_context) const override;
 #endif
 };
-
-

@@ -13,7 +13,7 @@ public:
 	BOOL InitInstance() override;
 	int ExitInstance() override;
 	afx_msg void OnAppAbout();
-	DECLARE_MESSAGE_MAP()
+DECLARE_MESSAGE_MAP()
 };
 
 extern CSDIBallsApp app;

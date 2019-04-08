@@ -20,15 +20,15 @@ void CALLBACK zfx_timer_proc(const HWND window_handle)
 IMPLEMENT_DYNCREATE(CSDIBallsView, CView)
 
 BEGIN_MESSAGE_MAP(CSDIBallsView, CView)
-	ON_COMMAND(ID_BUTTON_PLUS, &CSDIBallsView::OnButtonPlus)
-	ON_UPDATE_COMMAND_UI(ID_BUTTON_PLUS, &CSDIBallsView::OnUpdateButtonPlus)
-	ON_COMMAND(ID_BUTTON_MINUS, &CSDIBallsView::OnButtonMinus)
-	ON_UPDATE_COMMAND_UI(ID_BUTTON_MINUS, &CSDIBallsView::OnUpdateButtonMinus)
-	ON_COMMAND(ID_BUTTON_START, &CSDIBallsView::OnButtonStart)
-	ON_UPDATE_COMMAND_UI(ID_BUTTON_START, &CSDIBallsView::OnUpdateButtonStart)
-	ON_WM_DESTROY()
-	ON_WM_TIMER()
-	ON_WM_ERASEBKGND()
+		ON_COMMAND(ID_BUTTON_PLUS, &CSDIBallsView::OnButtonPlus)
+		ON_UPDATE_COMMAND_UI(ID_BUTTON_PLUS, &CSDIBallsView::OnUpdateButtonPlus)
+		ON_COMMAND(ID_BUTTON_MINUS, &CSDIBallsView::OnButtonMinus)
+		ON_UPDATE_COMMAND_UI(ID_BUTTON_MINUS, &CSDIBallsView::OnUpdateButtonMinus)
+		ON_COMMAND(ID_BUTTON_START, &CSDIBallsView::OnButtonStart)
+		ON_UPDATE_COMMAND_UI(ID_BUTTON_START, &CSDIBallsView::OnUpdateButtonStart)
+		ON_WM_DESTROY()
+		ON_WM_TIMER()
+		ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 // CSDIBallsView construction/destruction
@@ -57,7 +57,7 @@ BOOL CSDIBallsView::PreCreateWindow(CREATESTRUCT& creation_structure)
 void CSDIBallsView::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
-	m_nTimerID = SetTimer(WM_USER + 1, 20, NULL); // WM_TIMER
+	m_nTimerID = SetTimer(WM_USER + 1, 20, nullptr); // WM_TIMER
 	//m_nTimerID = SetTimer(WM_USER + 1, 20, ZfxTimerProc);
 
 	GetClientRect(m_pClientRect);
@@ -124,12 +124,12 @@ void CSDIBallsView::Dump(CDumpContext& dc) const
 	CView::Dump(dc);
 }
 
-CSDIBallsDoc* CSDIBallsView::GetDocument() const 
+CSDIBallsDoc* CSDIBallsView::GetDocument() const
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CSDIBallsDoc)));
 	return (CSDIBallsDoc*)m_pDocument;
 }
-#endif 
+#endif
 
 void CSDIBallsView::OnButtonPlus()
 {
@@ -137,7 +137,7 @@ void CSDIBallsView::OnButtonPlus()
 	m_bJaponia = true;
 }
 
-void CSDIBallsView::OnUpdateButtonPlus(CCmdUI *cmd_ui)
+void CSDIBallsView::OnUpdateButtonPlus(CCmdUI* cmd_ui)
 {
 	cmd_ui->SetCheck(m_bJamajka);
 }
@@ -148,7 +148,7 @@ void CSDIBallsView::OnButtonMinus()
 	m_bJaponia = false;
 }
 
-void CSDIBallsView::OnUpdateButtonMinus(CCmdUI *cmd_ui)
+void CSDIBallsView::OnUpdateButtonMinus(CCmdUI* cmd_ui)
 {
 	cmd_ui->SetCheck(m_bJaponia);
 }
@@ -160,7 +160,7 @@ void CSDIBallsView::OnButtonStart()
 	pFrame->ResetButton(m_bStart);
 }
 
-void CSDIBallsView::OnUpdateButtonStart(CCmdUI *cmd_ui)
+void CSDIBallsView::OnUpdateButtonStart(CCmdUI* cmd_ui)
 {
 }
 
@@ -174,7 +174,6 @@ void CSDIBallsView::OnDestroy()
 
 void CSDIBallsView::OnTimer(UINT_PTR event_id)
 {
-
 	if (m_bStart)
 	{
 		m_pBall->OffsetRect(2, 5);

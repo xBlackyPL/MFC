@@ -1,28 +1,18 @@
 #pragma once
 
-
 class CSDIBallsDoc : public CDocument
 {
 protected:
 	CSDIBallsDoc() noexcept;
-	DECLARE_DYNCREATE(CSDIBallsDoc)
-	DECLARE_MESSAGE_MAP()
-
-#ifdef SHARED_HANDLERS
-	void SetSearchContent(const CString& value);
-#endif 
+DECLARE_DYNCREATE(CSDIBallsDoc)
+DECLARE_MESSAGE_MAP()
 
 public:
-	virtual BOOL OnNewDocument();
-	virtual void Serialize(CArchive& archive);
-#ifdef SHARED_HANDLERS
-	virtual void InitializeSearchContent();
-	virtual void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds);
-#endif // SHARED_HANDLERS
-
+	BOOL OnNewDocument() override;
+	void Serialize(CArchive& archive) override;
 	virtual ~CSDIBallsDoc();
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& device_context) const;
+	void AssertValid() const override;
+	void Dump(CDumpContext& device_context) const override;
 #endif
 };

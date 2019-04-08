@@ -10,12 +10,12 @@
 IMPLEMENT_DYNCREATE(CMainFrame, CFrameWnd)
 
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
-	ON_WM_CREATE()
+		ON_WM_CREATE()
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
 {
-	ID_SEPARATOR,           
+	ID_SEPARATOR,
 	ID_INDICATOR_CAPS,
 	ID_INDICATOR_NUM,
 	ID_INDICATOR_SCRL,
@@ -29,7 +29,10 @@ UINT CMainFrame::buttons_ids_[] =
 	ID_APP_ABOUT,
 };
 
-CMainFrame::CMainFrame() noexcept { }
+CMainFrame::CMainFrame() noexcept
+{
+}
+
 CMainFrame::~CMainFrame() = default;
 
 int CMainFrame::OnCreate(const LPCREATESTRUCT creation_structure)
@@ -48,14 +51,14 @@ int CMainFrame::OnCreate(const LPCREATESTRUCT creation_structure)
 
 	auto& bar_ctrl = window_tool_bar.GetToolBarCtrl();
 	bar_ctrl.SetBitmapSize(CSize(59, 31));
-	bar_ctrl.SetButtonSize(CSize(59,31));
+	bar_ctrl.SetButtonSize(CSize(59, 31));
 
 	if (!window_status_bar.Create(this))
 	{
 		TRACE0("Failed to create status bar\n");
-		return -1; 
+		return -1;
 	}
-	window_status_bar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
+	window_status_bar.SetIndicators(indicators, sizeof(indicators) / sizeof(UINT));
 	window_tool_bar.EnableDocking(CBRS_ALIGN_ANY);
 	EnableDocking(CBRS_ALIGN_ANY);
 	DockControlBar(&window_tool_bar);

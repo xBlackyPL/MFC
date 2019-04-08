@@ -9,18 +9,18 @@
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS 
 #define _AFX_ALL_WARNINGS
 
-#include <afxwin.h>       
-#include <afxext.h>         
-#include <afxdisp.h> 
+#include <afxwin.h>
+#include <afxext.h>
+#include <afxdisp.h>
 
 #ifndef _AFX_NO_OLE_SUPPORT
-#include <afxdtctl.h>          
+#include <afxdtctl.h>
 #endif
 #ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>           
-#endif 
+#include <afxcmn.h>
+#endif
 
-#include <afxcontrolbars.h>    
+#include <afxcontrolbars.h>
 
 
 #ifdef _UNICODE
@@ -32,5 +32,3 @@
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
 #endif
-
-
