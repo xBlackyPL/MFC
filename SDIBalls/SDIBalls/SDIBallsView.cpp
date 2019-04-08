@@ -72,7 +72,8 @@ void CSDIBallsView::OnDraw(CDC* device_context)
 
 	ball_handler_.drawBalls(&device_context_memory);
 
-	ASSERT(device_context->BitBlt(0, 0, client_view_->Width(), client_view_->Height(), &device_context_memory, 0, 0, SRCCOPY));
+	ASSERT(device_context->BitBlt(0, 0, client_view_->Width(), client_view_->Height(), &device_context_memory, 0, 0,
+ SRCCOPY));
 
 	device_context_memory.SelectObject(old_bitmap);
 	bitmap.DeleteObject();
@@ -135,7 +136,7 @@ void CSDIBallsView::OnButtonMinus()
 	{
 		minus_enable_ = false;
 	}
-	
+
 	if (ball_handler_.numberOfBalls() >= BallsConfiguration::maximal_number_of_balls)
 	{
 		plus_enable_ = false;

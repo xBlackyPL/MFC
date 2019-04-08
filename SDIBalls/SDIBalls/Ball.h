@@ -20,15 +20,17 @@ namespace BallsCore
 
 
 	public:
-		Ball(const Position position, const VelocityVector velocity_vector, const unsigned int radius, const unsigned int color_index, unsigned int pen_size):
+		Ball(const Position position, const VelocityVector velocity_vector, const unsigned int radius,
+		     const unsigned int color_index, unsigned int pen_size):
 			position_(position), radius_(radius), velocity_vector_(velocity_vector)
 		{
-			appearance_ = std::make_unique<CRect>(position_.getX(), position_.getY(), position_.getX() + radius, position_.getY() + radius);
+			appearance_ = std::make_unique<CRect>(position_.getX(), position_.getY(), position_.getX() + radius,
+			                                      position_.getY() + radius);
 			auto item = BallsConfiguration::Colors.begin();
 			std::advance(item, color_index);
 			auto color = item->second;
 
-			if(item->first == "White")
+			if (item->first == "White")
 			{
 				pen_ = std::make_unique<CPen>(PS_SOLID, pen_size, BallsConfiguration::Colors.at("Black"));
 			}
@@ -63,7 +65,7 @@ namespace BallsCore
 			new_velocity *= -1;
 			velocity_vector_.setYAxisVelocity(new_velocity);
 		}
-		
+
 		void move()
 		{
 			position_.change(velocity_vector_);

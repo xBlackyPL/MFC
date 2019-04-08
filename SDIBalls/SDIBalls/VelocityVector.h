@@ -10,7 +10,8 @@ namespace BallsCore
 		VelocityVector() :
 			x_axis_velocity_(BallsConfiguration::default_ball_x_axis_velocity),
 			y_axis_velocity_(BallsConfiguration::default_ball_y_axis_velocity)
-		{}
+		{
+		}
 
 		VelocityVector(const VelocityVector& original) noexcept
 		{
@@ -27,7 +28,8 @@ namespace BallsCore
 		VelocityVector(const int x_axis_velocity, const int y_axis_velocity) :
 			x_axis_velocity_(x_axis_velocity),
 			y_axis_velocity_(y_axis_velocity)
-		{}
+		{
+		}
 
 		VelocityVector& operator=(const VelocityVector& original) noexcept
 		{
@@ -35,6 +37,7 @@ namespace BallsCore
 			y_axis_velocity_ = original.getYAxisVelocity();
 			return *this;
 		}
+
 		VelocityVector& operator=(VelocityVector&& original) noexcept
 		{
 			x_axis_velocity_ = original.getXAxisVelocity();
@@ -52,11 +55,13 @@ namespace BallsCore
 			x_axis_velocity_ += acceleration;
 			return *this;
 		}
+
 		VelocityVector& increaseYAxisVelocity(const int acceleration)
 		{
 			y_axis_velocity_ += acceleration;
 			return *this;
 		}
+
 		VelocityVector& setXAxisVelocity(const int x_axis_velocity)
 		{
 			x_axis_velocity_ = x_axis_velocity;

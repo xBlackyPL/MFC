@@ -29,7 +29,8 @@ namespace BallsCore
 		Position(const unsigned int x_axis_velocity, const unsigned int y_axis_velocity) :
 			x_(x_axis_velocity),
 			y_(y_axis_velocity)
-		{}
+		{
+		}
 
 		Position& operator=(const Position& original) noexcept
 		{
@@ -37,6 +38,7 @@ namespace BallsCore
 			y_ = original.getY();
 			return *this;
 		}
+
 		Position& operator=(Position&& original) noexcept
 		{
 			x_ = original.getX();
@@ -48,11 +50,13 @@ namespace BallsCore
 
 		unsigned int getX() const { return x_; }
 		unsigned int getY() const { return y_; }
+
 		Position& setX(const unsigned int x)
 		{
 			x_ = x;
 			return *this;
 		}
+
 		Position& setY(const unsigned int y)
 		{
 			y_ = y;
@@ -77,6 +81,7 @@ namespace BallsCore
 			y_ += velocity_vector.getYAxisVelocity();
 			return *this;
 		}
+
 	private:
 		unsigned int x_;
 		unsigned int y_;

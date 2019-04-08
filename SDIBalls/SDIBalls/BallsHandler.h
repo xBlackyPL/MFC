@@ -9,15 +9,16 @@
 namespace BallsCore
 {
 	using BallPool = std::vector<Ball>;
+
 	class BallsHandler
 	{
 	private:
 		BallPool ball_pool_;
-		CRect* client_view_;		
+		CRect* client_view_;
 	public:
 		BallsHandler() = default;
 
-		explicit BallsHandler(CRect* client_rect)				
+		explicit BallsHandler(CRect* client_rect)
 		{
 			client_view_ = client_rect;
 		}
@@ -36,13 +37,15 @@ namespace BallsCore
 
 			const unsigned int radius = radius_distribution(generator);
 
-			const std::uniform_int_distribution<> x_axis_velocity_distribution(BallsConfiguration::minimal_ball_x_axis_velocity,
+			const std::uniform_int_distribution<> x_axis_velocity_distribution(
+				BallsConfiguration::minimal_ball_x_axis_velocity,
 				BallsConfiguration::maximal_ball_x_axis_velocity);
-			const std::uniform_int_distribution<> y_axis_velocity_distribution(BallsConfiguration::minimal_ball_x_axis_velocity, 
+			const std::uniform_int_distribution<> y_axis_velocity_distribution(
+				BallsConfiguration::minimal_ball_x_axis_velocity,
 				BallsConfiguration::maximal_ball_x_axis_velocity);
 
-			const std::uniform_int_distribution<> x_distribution(30+radius, client_view_->Width()-2*radius);
-			const std::uniform_int_distribution<> y_distribution(30+radius, client_view_->Height()-2*radius);
+			const std::uniform_int_distribution<> x_distribution(30 + radius, client_view_->Width() - 2 * radius);
+			const std::uniform_int_distribution<> y_distribution(30 + radius, client_view_->Height() - 2 * radius);
 
 			const std::uniform_int_distribution<> color_index_distribution(0, BallsConfiguration::Colors.size() - 1);
 			const std::uniform_int_distribution<> pen_size_distribution(0, 4);
@@ -57,12 +60,13 @@ namespace BallsCore
 				.setX(x_distribution(generator))
 				.setY(y_distribution(generator));
 
-			ball_pool_.push_back(Ball(position, velocity_vector, radius, color_index_distribution(generator),pen_size_distribution(generator)));
+			ball_pool_.push_back(Ball(position, velocity_vector, radius, color_index_distribution(generator),
+			                          pen_size_distribution(generator)));
 		}
 
 		void killLast()
 		{
-			if(!ball_pool_.empty())
+			if (!ball_pool_.empty())
 			{
 				ball_pool_.erase(ball_pool_.begin());
 			}
@@ -79,12 +83,12 @@ namespace BallsCore
 			{
 				ball.move();
 				const auto position = ball.viewPosition();
-				if(position.getX() >= client_view_->Width() - ball.getRadius() || position.getX() <= 0)
+				if (position.getX() >= client_view_->Width() - ball.getRadius() || position.getX() <= 0)
 				{
 					ball.reversXAxisVelocity();
 				}
 
-				if(position.getY() >= client_view_->Height() - 2*ball.getRadius() || position.getY() <= 0)
+				if (position.getY() >= client_view_->Height() - 2 * ball.getRadius() || position.getY() <= 0)
 				{
 					ball.reversYAxisVelocity();
 				}
@@ -102,6 +106,5 @@ namespace BallsCore
 				device_context_memory->SelectObject(old_brush);
 			}
 		}
-
 	};
 }
