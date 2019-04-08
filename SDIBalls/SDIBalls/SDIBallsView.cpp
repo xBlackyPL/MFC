@@ -12,7 +12,7 @@
 #endif
 
 
-void CALLBACK zfx_timer_proc(const HWND window_handle)
+void CALLBACK zfx_timer_proc(const HWND const window_handle)
 {
 	::SendMessage(window_handle, WM_TIMER, 0, 0);
 }
@@ -33,13 +33,10 @@ END_MESSAGE_MAP()
 
 CSDIBallsView::CSDIBallsView() noexcept
 {
-	bool_1_ = true;
-	bool_2_ = false;
-
 	is_start_button_clicked_ = false;
 
 	client_view_ = std::make_unique<CRect>(CRect(0, 0, 0, 0));
-	demo_ball_ = std::make_unique<CRect>(CRect(20, 20, 80, 80));
+	ball_handler_ = BallsCore::BallsHandler(client_view_.get());
 }
 
 CSDIBallsView::~CSDIBallsView() = default;
@@ -54,46 +51,32 @@ void CSDIBallsView::OnInitialUpdate()
 	CView::OnInitialUpdate();
 	timer_id_ = SetTimer(WM_USER + 1, 20, nullptr);
 	GetClientRect(client_view_.get());
+	ball_handler_.spawnRandomBall();
+	ball_handler_.spawnRandomBall();
+	ball_handler_.spawnRandomBall();
 }
 
 void CSDIBallsView::OnDraw(CDC* device_context)
 {
-	CSDIBallsDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
+	const auto doc = GetDocument();
+	ASSERT_VALID(doc);
 
-	CDC memDC;
+	CDC device_context_memory;
+	ASSERT(device_context_memory.CreateCompatibleDC(device_context));
 
-	bool b = memDC.CreateCompatibleDC(device_context);
-	ASSERT(b);
+	CBitmap bitmap;
+	ASSERT(bitmap.CreateCompatibleBitmap(device_context, client_view_->Width(), client_view_->Height()));
 
-	CBitmap bmp;
-	b = bmp.CreateCompatibleBitmap(device_context, client_view_->Width(), client_view_->Height());
-	ASSERT(b);
-	CBitmap* pOldBitmap = memDC.SelectObject(&bmp);
-	memDC.FillSolidRect(client_view_.get(), RGB(255, 255, 255));
+	const auto old_bitmap = device_context_memory.SelectObject(&bitmap);
+	device_context_memory.FillSolidRect(client_view_.get(), RGB(255, 255, 255));
 
-	CPen* pPen = new CPen(PS_SOLID, 3, RGB(255, 0, 0));
-	CBrush* pBrush = new CBrush(RGB(255, 0, 0));
+	ball_handler_.drawBalls(&device_context_memory);
 
-	CPen* pOldPen = memDC.SelectObject(pPen);
-	CBrush* pOldBrush = memDC.SelectObject(pBrush);
+	ASSERT(device_context->BitBlt(0, 0, client_view_->Width(), client_view_->Height(), &device_context_memory, 0, 0, SRCCOPY));
 
-	memDC.Ellipse(demo_ball_.get());
-
-	memDC.SelectObject(pOldPen);
-	memDC.SelectObject(pOldBrush);
-
-	b = device_context->BitBlt(0, 0, client_view_->Width(), client_view_->Height(), &memDC, 0, 0, SRCCOPY);
-	ASSERT(b);
-
-	memDC.SelectObject(pOldBitmap);
-	bmp.DeleteObject();
-	memDC.DeleteDC();
-
-	delete pBrush;
-	delete pPen;
+	device_context_memory.SelectObject(old_bitmap);
+	bitmap.DeleteObject();
+	device_context_memory.DeleteDC();
 }
 
 #ifdef _DEBUG
@@ -110,36 +93,68 @@ void CSDIBallsView::Dump(CDumpContext& dc) const
 CSDIBallsDoc* CSDIBallsView::GetDocument() const
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CSDIBallsDoc)));
-	return static_cast<CSDIBallsDoc*>(m_pDocument);
+	return dynamic_cast<CSDIBallsDoc*>(m_pDocument);
 }
 #endif
 
 void CSDIBallsView::OnButtonPlus()
 {
-	bool_1_ = false;
-	bool_2_ = true;
+	ball_handler_.spawnRandomBall();
+	if (ball_handler_.numberOfBalls() > BallsConfiguration::minimal_number_of_balls)
+	{
+		minus_enable_ = true;
+	}
+	else
+	{
+		minus_enable_ = false;
+	}
+
+	if (ball_handler_.numberOfBalls() >= BallsConfiguration::maximal_number_of_balls)
+	{
+		plus_enable_ = false;
+	}
+	else
+	{
+		plus_enable_ = true;
+	}
 }
 
 void CSDIBallsView::OnUpdateButtonPlus(CCmdUI* cmd_ui)
 {
-	cmd_ui->SetCheck(bool_1_);
+	cmd_ui->Enable(plus_enable_);
 }
 
 void CSDIBallsView::OnButtonMinus()
 {
-	bool_1_ = true;
-	bool_2_ = false;
+	ball_handler_.killLast();
+	if (ball_handler_.numberOfBalls() > BallsConfiguration::minimal_number_of_balls)
+	{
+		minus_enable_ = true;
+	}
+	else
+	{
+		minus_enable_ = false;
+	}
+	
+	if (ball_handler_.numberOfBalls() >= BallsConfiguration::maximal_number_of_balls)
+	{
+		plus_enable_ = false;
+	}
+	else
+	{
+		plus_enable_ = true;
+	}
 }
 
 void CSDIBallsView::OnUpdateButtonMinus(CCmdUI* cmd_ui)
 {
-	cmd_ui->SetCheck(bool_2_);
+	cmd_ui->Enable(minus_enable_);
 }
 
 void CSDIBallsView::OnButtonStart()
 {
 	is_start_button_clicked_ = !is_start_button_clicked_;
-	auto* frame = static_cast<CMainFrame*>(GetParentFrame());
+	auto frame = dynamic_cast<CMainFrame*>(GetParentFrame());
 	frame->ResetButton(is_start_button_clicked_);
 }
 
@@ -157,7 +172,7 @@ void CSDIBallsView::OnTimer(const UINT_PTR event_id)
 {
 	if (is_start_button_clicked_)
 	{
-		demo_ball_->OffsetRect(2, 5);
+		ball_handler_.moveBalls();
 		Invalidate(false);
 	}
 

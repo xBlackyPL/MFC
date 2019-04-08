@@ -1,15 +1,16 @@
 #pragma once
 #include <memory>
+#include "BallsHandler.h"
 
 class CSDIBallsView : public CView
 {
 private:
 	std::unique_ptr<CRect> client_view_;
-	std::unique_ptr<CRect> demo_ball_;
+	BallsCore::BallsHandler ball_handler_;
 	UINT timer_id_;
-	bool bool_1_;
 	bool is_start_button_clicked_;
-	bool bool_2_;
+	bool minus_enable_{ false };
+	bool plus_enable_{ true };
 
 protected:
 	CSDIBallsView() noexcept;
@@ -19,7 +20,6 @@ DECLARE_MESSAGE_MAP()
 
 public:
 	CSDIBallsDoc* GetDocument() const;
-
 	void OnDraw(CDC* device_context) override;
 	BOOL PreCreateWindow(CREATESTRUCT& creation_structure) override;
 	void OnInitialUpdate() override;

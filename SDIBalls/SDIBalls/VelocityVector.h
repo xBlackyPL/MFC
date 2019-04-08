@@ -12,19 +12,19 @@ namespace BallsCore
 			y_axis_velocity_(BallsConfiguration::default_ball_y_axis_velocity)
 		{}
 
-		explicit VelocityVector(const VelocityVector& original) noexcept
+		VelocityVector(const VelocityVector& original) noexcept
 		{
 			x_axis_velocity_ = original.getXAxisVelocity();
 			y_axis_velocity_ = original.getYAxisVelocity();
 		}
 
-		explicit VelocityVector(const VelocityVector&& original) noexcept
+		VelocityVector(const VelocityVector&& original) noexcept
 		{
 			x_axis_velocity_ = original.getXAxisVelocity();
 			y_axis_velocity_ = original.getYAxisVelocity();
 		}
 
-		VelocityVector(const unsigned char x_axis_velocity, const unsigned char y_axis_velocity) :
+		VelocityVector(const int x_axis_velocity, const int y_axis_velocity) :
 			x_axis_velocity_(x_axis_velocity),
 			y_axis_velocity_(y_axis_velocity)
 		{}
@@ -44,15 +44,33 @@ namespace BallsCore
 
 		~VelocityVector() = default;
 
-		unsigned char getXAxisVelocity() const { return x_axis_velocity_; }
-		unsigned char getYAxisVelocity() const { return y_axis_velocity_; }
-		void increaseXAxisVelocity(const unsigned char acceleration) { x_axis_velocity_ += acceleration; }
-		void increaseYAxisVelocity(const unsigned char acceleration) { y_axis_velocity_ += acceleration; }
-		void setXAxisVelocity(const unsigned char x_axis_velocity) { x_axis_velocity_ = x_axis_velocity; }
-		void setYAxisVelocity(const unsigned char y_axis_velocity) { y_axis_velocity_ = y_axis_velocity; }
+		int getXAxisVelocity() const { return x_axis_velocity_; }
+		int getYAxisVelocity() const { return y_axis_velocity_; }
+
+		VelocityVector& increaseXAxisVelocity(const int acceleration)
+		{
+			x_axis_velocity_ += acceleration;
+			return *this;
+		}
+		VelocityVector& increaseYAxisVelocity(const int acceleration)
+		{
+			y_axis_velocity_ += acceleration;
+			return *this;
+		}
+		VelocityVector& setXAxisVelocity(const int x_axis_velocity)
+		{
+			x_axis_velocity_ = x_axis_velocity;
+			return *this;
+		}
+
+		VelocityVector& setYAxisVelocity(const int y_axis_velocity)
+		{
+			y_axis_velocity_ = y_axis_velocity;
+			return *this;
+		}
 
 	private:
-		unsigned char x_axis_velocity_;
-		unsigned char y_axis_velocity_;
+		int x_axis_velocity_;
+		int y_axis_velocity_;
 	};
 }
