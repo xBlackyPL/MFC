@@ -4,17 +4,16 @@
 	#error "include 'stdafx.h' before including this file for PCH"
 #endif
 
-#include "resource.h"
+#include "resource.h"       // main symbols
 
-class SDIBallsApp : public CWinApp
+class CSDIBallsApp : public CWinApp
 {
 public:
-	SDIBallsApp() noexcept;
+	CSDIBallsApp() noexcept;
 	BOOL InitInstance() override;
 	int ExitInstance() override;
-
 	afx_msg void OnAppAbout();
-DECLARE_MESSAGE_MAP()
+	DECLARE_MESSAGE_MAP()
 };
 
-extern SDIBallsApp app;
+extern CSDIBallsApp app;
