@@ -55,27 +55,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Zaj4.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Zaj4.rc2">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\Zaj4Doc.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\Zaj4.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="res\Toolbar.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\toolbar1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\SDIBalls.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\SDIBallDoc.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SDIBalls.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

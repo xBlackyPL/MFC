@@ -43,7 +43,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	if (!m_wndToolBar.Create(this) ||
-		!m_wndToolBar.LoadBitmap(IDR_MYTOOLBAR) ||
+		!m_wndToolBar.LoadBitmap(IDR_SDIBALLSBAR) ||
 		!m_wndToolBar.SetButtons(m_buttonsIDs, sizeof(m_buttonsIDs) / sizeof(UINT)))
 	{
 		TRACE0("Failed to create toolbar\n");

@@ -205,16 +205,13 @@
     <ClCompile Include="SDIBallsView.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Zaj4.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Zaj4.rc2" />
+    <ResourceCompile Include="SDIBalls.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Toolbar.bmp" />
     <Image Include="res\toolbar1.bmp" />
-    <Image Include="res\Zaj4.ico" />
-    <Image Include="res\Zaj4Doc.ico" />
+    <Image Include="res\SDIBalls.ico" />
+    <Image Include="res\SDIBallDoc.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
