@@ -1,18 +1,20 @@
 #pragma once
+#include <memory>
 
 class CSDIBallsView : public CView
 {
+private:
+	std::unique_ptr<CRect> client_view_;
+	std::unique_ptr<CRect> demo_ball_;
+	UINT timer_id_;
+	bool bool_1_;
+	bool is_start_button_clicked_;
+	bool bool_2_;
+
 protected:
 	CSDIBallsView() noexcept;
+
 DECLARE_DYNCREATE(CSDIBallsView)
-	bool m_bJamajka;
-	bool m_bStart;
-	bool m_bJaponia;
-
-	CRect* m_pBall;
-	CRect* m_pClientRect;
-
-	UINT m_nTimerID;
 DECLARE_MESSAGE_MAP()
 
 public:

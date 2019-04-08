@@ -31,23 +31,18 @@ BEGIN_MESSAGE_MAP(CSDIBallsView, CView)
 		ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
-// CSDIBallsView construction/destruction
-
 CSDIBallsView::CSDIBallsView() noexcept
 {
-	m_bJamajka = true;
-	m_bJaponia = false;
-	m_bStart = false;
+	bool_1_ = true;
+	bool_2_ = false;
 
-	m_pClientRect = new CRect(0, 0, 0, 0);
-	m_pBall = new CRect(20, 20, 80, 80);
+	is_start_button_clicked_ = false;
+
+	client_view_ = std::make_unique<CRect>(CRect(0, 0, 0, 0));
+	demo_ball_ = std::make_unique<CRect>(CRect(20, 20, 80, 80));
 }
 
-CSDIBallsView::~CSDIBallsView()
-{
-	delete m_pClientRect;
-	delete m_pBall;
-}
+CSDIBallsView::~CSDIBallsView() = default;
 
 BOOL CSDIBallsView::PreCreateWindow(CREATESTRUCT& creation_structure)
 {
@@ -57,10 +52,8 @@ BOOL CSDIBallsView::PreCreateWindow(CREATESTRUCT& creation_structure)
 void CSDIBallsView::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
-	m_nTimerID = SetTimer(WM_USER + 1, 20, nullptr); // WM_TIMER
-	//m_nTimerID = SetTimer(WM_USER + 1, 20, ZfxTimerProc);
-
-	GetClientRect(m_pClientRect);
+	timer_id_ = SetTimer(WM_USER + 1, 20, nullptr);
+	GetClientRect(client_view_.get());
 }
 
 void CSDIBallsView::OnDraw(CDC* device_context)
@@ -76,10 +69,10 @@ void CSDIBallsView::OnDraw(CDC* device_context)
 	ASSERT(b);
 
 	CBitmap bmp;
-	b = bmp.CreateCompatibleBitmap(device_context, m_pClientRect->Width(), m_pClientRect->Height());
+	b = bmp.CreateCompatibleBitmap(device_context, client_view_->Width(), client_view_->Height());
 	ASSERT(b);
 	CBitmap* pOldBitmap = memDC.SelectObject(&bmp);
-	memDC.FillSolidRect(m_pClientRect, RGB(255, 255, 255));
+	memDC.FillSolidRect(client_view_.get(), RGB(255, 255, 255));
 
 	CPen* pPen = new CPen(PS_SOLID, 3, RGB(255, 0, 0));
 	CBrush* pBrush = new CBrush(RGB(255, 0, 0));
@@ -87,28 +80,18 @@ void CSDIBallsView::OnDraw(CDC* device_context)
 	CPen* pOldPen = memDC.SelectObject(pPen);
 	CBrush* pOldBrush = memDC.SelectObject(pBrush);
 
-	memDC.Ellipse(m_pBall);
+	memDC.Ellipse(demo_ball_.get());
 
 	memDC.SelectObject(pOldPen);
 	memDC.SelectObject(pOldBrush);
 
-	b = device_context->BitBlt(0, 0, m_pClientRect->Width(), m_pClientRect->Height(), &memDC, 0, 0, SRCCOPY);
+	b = device_context->BitBlt(0, 0, client_view_->Width(), client_view_->Height(), &memDC, 0, 0, SRCCOPY);
 	ASSERT(b);
 
 	memDC.SelectObject(pOldBitmap);
 	bmp.DeleteObject();
 	memDC.DeleteDC();
 
-	//CBrush* pBrush = new CBrush(RGB(255, 0, 0));
-	//CPen* pen = new CPen(PS_SOLID, 3, RGB(255, 0, 0));
-	//CPen* oldPen = device_context->SelectObject(pen);
-	//CBrush* pOldBrush = device_context->SelectObject(pBrush);
-	//
-
-	//device_context->Ellipse(m_pBall);
-
-	//device_context->SelectObject(oldPen);
-	//device_context->SelectObject(pOldBrush);
 	delete pBrush;
 	delete pPen;
 }
@@ -127,37 +110,37 @@ void CSDIBallsView::Dump(CDumpContext& dc) const
 CSDIBallsDoc* CSDIBallsView::GetDocument() const
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CSDIBallsDoc)));
-	return (CSDIBallsDoc*)m_pDocument;
+	return static_cast<CSDIBallsDoc*>(m_pDocument);
 }
 #endif
 
 void CSDIBallsView::OnButtonPlus()
 {
-	m_bJamajka = false;
-	m_bJaponia = true;
+	bool_1_ = false;
+	bool_2_ = true;
 }
 
 void CSDIBallsView::OnUpdateButtonPlus(CCmdUI* cmd_ui)
 {
-	cmd_ui->SetCheck(m_bJamajka);
+	cmd_ui->SetCheck(bool_1_);
 }
 
 void CSDIBallsView::OnButtonMinus()
 {
-	m_bJamajka = true;
-	m_bJaponia = false;
+	bool_1_ = true;
+	bool_2_ = false;
 }
 
 void CSDIBallsView::OnUpdateButtonMinus(CCmdUI* cmd_ui)
 {
-	cmd_ui->SetCheck(m_bJaponia);
+	cmd_ui->SetCheck(bool_2_);
 }
 
 void CSDIBallsView::OnButtonStart()
 {
-	m_bStart = !m_bStart;
-	CMainFrame* pFrame = (CMainFrame*)GetParentFrame();
-	pFrame->ResetButton(m_bStart);
+	is_start_button_clicked_ = !is_start_button_clicked_;
+	auto* frame = static_cast<CMainFrame*>(GetParentFrame());
+	frame->ResetButton(is_start_button_clicked_);
 }
 
 void CSDIBallsView::OnUpdateButtonStart(CCmdUI* cmd_ui)
@@ -166,17 +149,15 @@ void CSDIBallsView::OnUpdateButtonStart(CCmdUI* cmd_ui)
 
 void CSDIBallsView::OnDestroy()
 {
-	KillTimer(m_nTimerID);
+	KillTimer(timer_id_);
 	CView::OnDestroy();
-
-	// TODO: Dodaj tutaj swój kod procedury obs³ugi komunikatów
 }
 
-void CSDIBallsView::OnTimer(UINT_PTR event_id)
+void CSDIBallsView::OnTimer(const UINT_PTR event_id)
 {
-	if (m_bStart)
+	if (is_start_button_clicked_)
 	{
-		m_pBall->OffsetRect(2, 5);
+		demo_ball_->OffsetRect(2, 5);
 		Invalidate(false);
 	}
 
@@ -185,33 +166,5 @@ void CSDIBallsView::OnTimer(UINT_PTR event_id)
 
 BOOL CSDIBallsView::OnEraseBackground(CDC* device_context)
 {
-	// TODO: Dodaj tutaj swój kod procedury obs³ugi komunikatów i/lub wywo³aj domyœlny
 	return 1;
-	//return CView::OnEraseBackground(device_context);
 }
-
-/*
-	- Stworzyc aplikacje SDI Balls
-	- Dodaæ obs³ugê Timera
-	- W³asny toolbar z przyciskami: START/STOP (zmienia siê grafika przycisku)
-									- Dwa przyciski: + / -
-									+ - dodaje kulke
-									- - usuwa kulke
-	- Poczatkowo 3 kulki (nieaktywny minus), nie wiecej niz 10 (nieaktywny plus)
-	- Pilki o rozmiarach losowych (30 - 120)
-	- Kolory pilek losowe
-	- Rysowanie poprzez pamiêciowy kontekst urz¹dzenia
-	- Wszystkie atrybuty 
-	- Dodac klase CBall pochodna od CRect (kolorowej kulki)
-			SetColor(COLORREF) /// DELETE + Create
-			SetBallSize // Const ref to rect
-			DrawBall() // CDC pointer
-
-			CreateObjects(COLORREF BallColor ) // Kreuje pedzel i pioro, deleteobject jest wywolywany dla piora i pedzla
-			InitObjects() // Przydzielenie pamieci i kreacja
-			SetBall(Rect, Color, vector) // Ustawia prostokat, kolor i wektory ruchu
-			SetOffset(int nOffX, int OffY) // Przesuniecie ruchu
-			SetBoundRect( ref rozmiar obszaru clienta, po ktorym porusza sie kulka)
-
-			// Zmodyfikowac klase CBall w oparciu o te skladowe - offset X oraz offset Y
-*/
