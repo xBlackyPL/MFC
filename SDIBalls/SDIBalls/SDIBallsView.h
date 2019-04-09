@@ -39,6 +39,7 @@ public:
 	afx_msg void OnDestroy();
 	afx_msg void OnTimer(UINT_PTR event_id);
 	afx_msg BOOL OnEraseBackground(CDC* device_context);
+	afx_msg void OnSize(UINT type, int new_x, int new_y);
 };
 
 #ifndef _DEBUG

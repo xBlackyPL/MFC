@@ -12,7 +12,7 @@
 #endif
 
 
-void CALLBACK zfx_timer_proc(const HWND const window_handle)
+void CALLBACK zfx_timer_proc(const HWND window_handle)
 {
 	::SendMessage(window_handle, WM_TIMER, 0, 0);
 }
@@ -29,6 +29,7 @@ BEGIN_MESSAGE_MAP(CSDIBallsView, CView)
 		ON_WM_DESTROY()
 		ON_WM_TIMER()
 		ON_WM_ERASEBKGND()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 CSDIBallsView::CSDIBallsView() noexcept
@@ -173,7 +174,7 @@ void CSDIBallsView::OnTimer(const UINT_PTR event_id)
 {
 	if (is_start_button_clicked_)
 	{
-		ball_handler_.moveBalls();
+		ball_handler_.moveBalls(client_view_.get());
 		Invalidate(false);
 	}
 
@@ -183,4 +184,11 @@ void CSDIBallsView::OnTimer(const UINT_PTR event_id)
 BOOL CSDIBallsView::OnEraseBackground(CDC* device_context)
 {
 	return 1;
+}
+
+
+void CSDIBallsView::OnSize(const UINT type, const int new_x, const int new_y)
+{
+	CView::OnSize(type, new_x, new_y);
+	GetClientRect(client_view_.get());
 }

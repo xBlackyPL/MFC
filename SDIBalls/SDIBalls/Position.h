@@ -81,7 +81,7 @@ namespace BallsCore
 			y_ += velocity_vector.getYAxisVelocity();
 			return *this;
 		}
-
+		
 	private:
 		unsigned int x_;
 		unsigned int y_;

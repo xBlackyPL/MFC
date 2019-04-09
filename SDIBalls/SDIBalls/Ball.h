@@ -17,14 +17,13 @@ namespace BallsCore
 		std::unique_ptr<CRect> appearance_;
 		std::unique_ptr<CPen> pen_;
 		std::unique_ptr<CBrush> brush_;
-
-
+		
 	public:
 		Ball(const Position position, const VelocityVector velocity_vector, const unsigned int radius,
-		     const unsigned int color_index, unsigned int pen_size):
+		     const unsigned int color_index):
 			position_(position), radius_(radius), velocity_vector_(velocity_vector)
 		{
-			appearance_ = std::make_unique<CRect>(position_.getX(), position_.getY(), position_.getX() + radius,
+			appearance_ = std::make_unique<CRect>(position_.getX() - radius, position_.getY() - radius, position_.getX() + radius,
 			                                      position_.getY() + radius);
 			auto item = BallsConfiguration::Colors.begin();
 			std::advance(item, color_index);
@@ -32,11 +31,11 @@ namespace BallsCore
 
 			if (item->first == "White")
 			{
-				pen_ = std::make_unique<CPen>(PS_SOLID, pen_size, BallsConfiguration::Colors.at("Black"));
+				pen_ = std::make_unique<CPen>(PS_SOLID, 1, BallsConfiguration::Colors.at("Black"));
 			}
 			else
 			{
-				pen_ = std::make_unique<CPen>(PS_SOLID, pen_size, color);
+				pen_ = std::make_unique<CPen>(PS_SOLID, 1, color);
 			}
 
 			brush_ = std::make_unique<CBrush>(color);
@@ -52,14 +51,14 @@ namespace BallsCore
 			return velocity_vector_;
 		}
 
-		void reversXAxisVelocity()
+		void reverseXAxisVelocity()
 		{
 			auto new_velocity = velocity_vector_.getXAxisVelocity();
 			new_velocity *= -1;
 			velocity_vector_.setXAxisVelocity(new_velocity);
 		}
 
-		void reversYAxisVelocity()
+		void reverseYAxisVelocity()
 		{
 			auto new_velocity = velocity_vector_.getYAxisVelocity();
 			new_velocity *= -1;
@@ -90,6 +89,16 @@ namespace BallsCore
 		CBrush* viewBrush() const
 		{
 			return brush_.get();
+		}
+
+		void setX(unsigned int new_x)
+		{
+			position_.setX(new_x);
+		}
+
+		void setY(unsigned int new_y)
+		{
+			position_.setY(new_y);
 		}
 	};
 }
