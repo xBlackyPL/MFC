@@ -183,6 +183,8 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CCalculatorDlg.h" />
+    <ClInclude Include="ComplexNumber.h" />
     <ClInclude Include="ComplexNumberCalculator.h" />
     <ClInclude Include="ComplexNumberCalculatorDoc.h" />
     <ClInclude Include="ComplexNumberCalculatorView.h" />
@@ -192,6 +194,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CCalculatorDlg.cpp" />
+    <ClCompile Include="ComplexNumber.cpp" />
     <ClCompile Include="ComplexNumberCalculator.cpp" />
     <ClCompile Include="ComplexNumberCalculatorDoc.cpp" />
     <ClCompile Include="ComplexNumberCalculatorView.cpp" />

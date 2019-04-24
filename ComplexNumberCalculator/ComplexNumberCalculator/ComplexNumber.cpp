@@ -57,39 +57,39 @@ complex_number complex_number::conjugate() const
 	return complex_number(real_, imaginary_ * (-1));
 }
 
-complex_number& complex_number::operator+=(const complex_number& complex)
+complex_number& operator+=(complex_number& left, const complex_number& complex)
 {
-	real_ += complex.real_;
-	imaginary_ += complex.imaginary_;
-	return *this;
+	left.real_ += complex.real_;
+	left.imaginary_ += complex.imaginary_;
+	return left;
 }
 
-complex_number& complex_number::operator-=(const complex_number& complex)
+complex_number& operator-=(complex_number& left, const complex_number& complex)
 {
-	real_ -= complex.real_;
-	imaginary_ -= complex.imaginary_;
-	return *this;
+	left.real_ -= complex.real_;
+	left.imaginary_ -= complex.imaginary_;
+	return left;
 }
 
-complex_number& complex_number::operator*=(const complex_number& complex)
+complex_number& operator*=(complex_number& left, const complex_number& complex)
 {
-	real_ = this->real_ * complex.real_ - this->imaginary_ * complex.imaginary_;
-	imaginary_ = this->real_ * complex.imaginary_ + complex.real_ * this->imaginary_;
-	return *this;
+	left.real_ = left.real_ * complex.real_ - left.imaginary_ * complex.imaginary_;
+	left.imaginary_ = left.real_ * complex.imaginary_ + complex.real_ * left.imaginary_;
+	return left;
 }
 
-complex_number& complex_number::operator/=(const complex_number& complex)
+complex_number& operator/=(complex_number& left, const complex_number& complex)
 {
 	const auto denominator = complex.real_ * complex.real_ + complex.imaginary_ * complex.imaginary_;
 	if (denominator < 0)
 	{
-		this->real_ = 0;
-		this->imaginary_ = 0;
-		return *this;
+		left.real_ = 0;
+		left.imaginary_ = 0;
+		return left;
 	}
-	this->real_ = (this->real_ * complex.real_ + this->imaginary_ * complex.imaginary_) / denominator;
-	this->imaginary_ = (this->imaginary_ * complex.real_ - this->real_ * complex.imaginary_) / denominator;
-	return *this;
+	left.real_ = (left.real_ * complex.real_ + left.imaginary_ * complex.imaginary_) / denominator;
+	left.imaginary_ = (left.imaginary_ * complex.real_ - left.real_ * complex.imaginary_) / denominator;
+	return left;
 }
 
 complex_number operator+(const complex_number& complex1, const complex_number& complex2)

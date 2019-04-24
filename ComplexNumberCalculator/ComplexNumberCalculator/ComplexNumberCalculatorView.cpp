@@ -33,6 +33,7 @@ void CComplexNumberCalculatorView::OnDraw(CDC* device_context)
 	if (!doc)
 	{
 	}
+	AfxGetMainWnd()->SetWindowText(LPCWSTR(L"Complex Number Calculator"));
 }
 
 #ifdef _DEBUG

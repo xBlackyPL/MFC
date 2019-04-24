@@ -6,6 +6,7 @@
 
 #include "ComplexNumberCalculatorDoc.h"
 #include "ComplexNumberCalculatorView.h"
+#include "CCalculatorDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -15,6 +16,7 @@ BEGIN_MESSAGE_MAP(CComplexNumberCalculatorApp, CWinApp)
 		ON_COMMAND(ID_APP_ABOUT, &CComplexNumberCalculatorApp::OnAppAbout)
 		ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
 		ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
+	ON_COMMAND(ID_CALCULATOR, &CComplexNumberCalculatorApp::OnCalculator)
 END_MESSAGE_MAP()
 
 CComplexNumberCalculatorApp::CComplexNumberCalculatorApp() noexcept
@@ -108,4 +110,11 @@ void CComplexNumberCalculatorApp::OnAppAbout()
 {
 	CAboutDlg about_dlg;
 	about_dlg.DoModal();
+}
+
+
+void CComplexNumberCalculatorApp::OnCalculator()
+{
+	CCalculatorDlg calculator_dlg;
+	calculator_dlg.DoModal();
 }
