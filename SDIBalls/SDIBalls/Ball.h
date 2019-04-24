@@ -17,13 +17,14 @@ namespace BallsCore
 		std::unique_ptr<CRect> appearance_;
 		std::unique_ptr<CPen> pen_;
 		std::unique_ptr<CBrush> brush_;
-		
+
 	public:
 		Ball(const Position position, const VelocityVector velocity_vector, const unsigned int radius,
 		     const unsigned int color_index):
 			position_(position), radius_(radius), velocity_vector_(velocity_vector)
 		{
-			appearance_ = std::make_unique<CRect>(position_.getX() - radius, position_.getY() - radius, position_.getX() + radius,
+			appearance_ = std::make_unique<CRect>(position_.getX() - radius, position_.getY() - radius,
+			                                      position_.getX() + radius,
 			                                      position_.getY() + radius);
 			auto item = BallsConfiguration::Colors.begin();
 			std::advance(item, color_index);

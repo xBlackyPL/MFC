@@ -29,7 +29,7 @@ BEGIN_MESSAGE_MAP(CSDIBallsView, CView)
 		ON_WM_DESTROY()
 		ON_WM_TIMER()
 		ON_WM_ERASEBKGND()
-	ON_WM_SIZE()
+		ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 CSDIBallsView::CSDIBallsView() noexcept
