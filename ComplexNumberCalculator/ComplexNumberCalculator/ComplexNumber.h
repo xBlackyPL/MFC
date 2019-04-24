@@ -17,9 +17,10 @@ public:
 	~complex_number();
 
 	double get_real() const;
-	void set_real(double real);
 	double get_imaginary() const;
-	void set_imaginary(double imaginary);
+
+	void set_real(double);
+	void set_imaginary(double);
 
 	double modulus() const;
 	complex_number conjugate() const;
