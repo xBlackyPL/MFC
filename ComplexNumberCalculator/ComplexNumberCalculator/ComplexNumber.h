@@ -25,10 +25,10 @@ public:
 	double modulus() const;
 	complex_number conjugate() const;
 
-	friend complex_number& operator+=(complex_number&,const complex_number&);
-	friend complex_number& operator-=(complex_number&,const complex_number&);
-	friend complex_number& operator*=(complex_number&,const complex_number&);
-	friend complex_number& operator/=(complex_number&,const complex_number&);
+	friend complex_number& operator+=(complex_number&, const complex_number&);
+	friend complex_number& operator-=(complex_number&, const complex_number&);
+	friend complex_number& operator*=(complex_number&, const complex_number&);
+	friend complex_number& operator/=(complex_number&, const complex_number&);
 
 	friend complex_number operator+(const complex_number&, const complex_number&);
 	friend complex_number operator-(const complex_number&, const complex_number&);

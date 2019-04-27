@@ -73,13 +73,18 @@ complex_number& operator-=(complex_number& left, const complex_number& complex)
 
 complex_number& operator*=(complex_number& left, const complex_number& complex)
 {
-	left.real_ = left.real_ * complex.real_ - left.imaginary_ * complex.imaginary_;
-	left.imaginary_ = left.real_ * complex.imaginary_ + complex.real_ * left.imaginary_;
+	const auto left_real = left.real_;
+	const auto left_imaginary = left.imaginary_;
+
+	left.real_ = left_real * complex.real_ - left_imaginary * complex.imaginary_;
+	left.imaginary_ = left_real * complex.imaginary_ + left_imaginary * complex.real_;
 	return left;
 }
 
 complex_number& operator/=(complex_number& left, const complex_number& complex)
 {
+	const auto left_real = left.real_;
+	const auto left_imaginary = left.imaginary_;
 	const auto denominator = complex.real_ * complex.real_ + complex.imaginary_ * complex.imaginary_;
 	if (denominator < 0)
 	{
@@ -87,8 +92,8 @@ complex_number& operator/=(complex_number& left, const complex_number& complex)
 		left.imaginary_ = 0;
 		return left;
 	}
-	left.real_ = (left.real_ * complex.real_ + left.imaginary_ * complex.imaginary_) / denominator;
-	left.imaginary_ = (left.imaginary_ * complex.real_ - left.real_ * complex.imaginary_) / denominator;
+	left.real_ = (left_real * complex.real_ + left_imaginary * complex.imaginary_) / denominator;
+	left.imaginary_ = (left_imaginary * complex.real_ - left_real * complex.imaginary_) / denominator;
 	return left;
 }
 

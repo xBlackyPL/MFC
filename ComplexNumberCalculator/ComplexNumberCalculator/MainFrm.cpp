@@ -60,10 +60,10 @@ int CMainFrame::OnCreate(const LPCREATESTRUCT creation_structure)
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& creation_structure)
 {
 	creation_structure.cx = 350;
-	creation_structure.cy = 300;	
+	creation_structure.cy = 300;
 	creation_structure.x = 0;
 	creation_structure.y = 0;
-	return CFrameWnd::PreCreateWindow(creation_structure);	
+	return CFrameWnd::PreCreateWindow(creation_structure);
 }
 
 #ifdef _DEBUG

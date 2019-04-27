@@ -15,7 +15,7 @@ public:
 
 	afx_msg void OnAppAbout();
 DECLARE_MESSAGE_MAP()
-afx_msg void OnCalculator();
+	afx_msg void OnCalculator();
 };
 
 extern CComplexNumberCalculatorApp app;

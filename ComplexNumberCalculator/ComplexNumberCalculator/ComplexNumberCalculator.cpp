@@ -16,7 +16,7 @@ BEGIN_MESSAGE_MAP(CComplexNumberCalculatorApp, CWinApp)
 		ON_COMMAND(ID_APP_ABOUT, &CComplexNumberCalculatorApp::OnAppAbout)
 		ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
 		ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
-	ON_COMMAND(ID_CALCULATOR, &CComplexNumberCalculatorApp::OnCalculator)
+		ON_COMMAND(ID_CALCULATOR, &CComplexNumberCalculatorApp::OnCalculator)
 END_MESSAGE_MAP()
 
 CComplexNumberCalculatorApp::CComplexNumberCalculatorApp() noexcept

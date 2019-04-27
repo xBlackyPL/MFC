@@ -3,18 +3,21 @@
 
 class CCalculatorDlg : public CDialog
 {
-	DECLARE_DYNAMIC(CCalculatorDlg)
+private:
+DECLARE_DYNAMIC(CCalculatorDlg)
+protected:
+	void DoDataExchange(CDataExchange* data_exchange) override;
+DECLARE_MESSAGE_MAP()
 
 public:
-	CCalculatorDlg(CWnd* parent = nullptr); 
+	CCalculatorDlg(CWnd* parent = nullptr);
+	afx_msg void OnBnClickedModulusLeft();
+	afx_msg void OnBnClickedConjugateLeft();
+	afx_msg void OnBnClickedModulusRight();
+	afx_msg void OnBnClickedConjugateRight();
+	afx_msg void OnBnClickedPlus();
+	afx_msg void OnBnClickedMinus();
+	afx_msg void OnBnClickedMultiply();
+	afx_msg void OnBnClickedDivide();
 	virtual ~CCalculatorDlg();
-
-#ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_CCalculatorDlg };
-#endif
-
-protected:
-	virtual void DoDataExchange(CDataExchange* data_exchange);
-
-	DECLARE_MESSAGE_MAP()
 };
