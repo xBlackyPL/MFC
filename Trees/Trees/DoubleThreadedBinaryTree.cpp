@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <random>
 
 double_threaded_binary_tree::double_threaded_binary_tree()
 {
@@ -34,13 +35,16 @@ double_threaded_binary_tree& double_threaded_binary_tree::operator=(double_threa
 	return *this;
 }
 
-void double_threaded_binary_tree::rand_insert(const int count, const int min, const int max)
+void double_threaded_binary_tree::unique_random_number_insert(const int count, const int min, const int max)
 {
-	srand(static_cast<unsigned int>(time(nullptr)));
+	std::random_device random_device;
+	std::mt19937 generator(random_device());
+	const std::uniform_int_distribution<int> uniform_int_distribution(min, max);
+
 	std::cout << "Values:" << std::endl;
 	for (auto i = 0; i < count - 1; i++)
 	{
-		const auto new_val = rand() % (max - min + 1) + min;
+		const auto new_val = uniform_int_distribution(generator);
 		if (!find_val(new_val))
 		{
 			insert(new_val);
@@ -140,7 +144,7 @@ bool double_threaded_binary_tree::find_val(const int data) const
 	}
 }
 
-void double_threaded_binary_tree::print_in_order() const
+void double_threaded_binary_tree::print_in_order()
 {
 	auto current = head_->left;
 	while (current->l_tag == 1)
@@ -150,9 +154,39 @@ void double_threaded_binary_tree::print_in_order() const
 	while (current != head_)
 	{
 		std::cout << current->value << " ";
-		current = find_next_in_order(current);
+
+		if (current->r_tag == 0)
+		{
+			current = current->right;
+		}
+		else
+		{
+			current = current->right;
+			while (current->l_tag != 0)
+			{
+				current = current->left;
+			}
+		}
 	}
 	std::cout << std::endl;
+}
+
+void double_threaded_binary_tree::print_pre_order()
+{
+	auto current = head_;
+	do
+	{
+		current = find_next_pre_order(current);		
+		std::cout << current->value << " ";
+	}
+	while (current != head_ && !head_visited_);
+
+	std::cout << std::endl;
+	head_visited_ = false;
+}
+
+void double_threaded_binary_tree::print_post_order()
+{
 }
 
 double_threaded_binary_tree::dt_tree* double_threaded_binary_tree::find_next_in_order(dt_tree* current)
@@ -162,9 +196,39 @@ double_threaded_binary_tree::dt_tree* double_threaded_binary_tree::find_next_in_
 		return current->right;
 	}
 	current = current->right;
-	while (current->l_tag != 0)
+	while (current->l_tag == 1)
 	{
 		current = current->left;
 	}
+	return current;
+}
+
+double_threaded_binary_tree::dt_tree* double_threaded_binary_tree::find_next_pre_order(dt_tree* current)
+{
+	if (current->l_tag == 1)
+	{
+		return current->left;
+	}
+
+	if (current == head_)
+	{
+		if (head_visited_)
+		{
+			return current;
+		}
+		head_visited_ = true;
+	}
+
+	current = current->right;
+	if (current->r_tag == 1)
+	{
+		current = current->right;	
+	}
+
+	return current;
+}
+
+double_threaded_binary_tree::dt_tree* double_threaded_binary_tree::find_next_post_order(dt_tree* current)
+{
 	return current;
 }

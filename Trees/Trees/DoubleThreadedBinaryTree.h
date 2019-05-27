@@ -8,8 +8,8 @@ public:
 		int value;
 		dt_tree* left;
 		dt_tree* right;
-		int l_tag;
-		int r_tag;
+		unsigned l_tag : 1;
+		unsigned r_tag : 1;
 	};
 
 	double_threaded_binary_tree();
@@ -24,19 +24,27 @@ public:
 
 	double_threaded_binary_tree& operator=(double_threaded_binary_tree&&) noexcept;
 
-	void rand_insert(int count, int min, int max);
+	void unique_random_number_insert(int, int, int);
 
-	void insert(int data);
+	void insert(int);
 
-	bool find_val(int data) const;
+	bool find_val(int) const;
 
-	void print_in_order() const;
+	void print_in_order();
 
-	static dt_tree* find_next_in_order(dt_tree* current);
+	void print_pre_order();
+
+	void print_post_order();
+
+	dt_tree* find_next_in_order(dt_tree*);
+
+	dt_tree* find_next_pre_order(dt_tree*);
+
+	dt_tree* find_next_post_order(dt_tree*);
 
 private:
-
+	bool head_visited_ = false;
 	dt_tree* head_;
-	int direction_left_{};
-	int direction_right_{};
+	bool direction_left_{};
+	bool direction_right_{};
 };
