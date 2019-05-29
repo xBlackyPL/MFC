@@ -4,37 +4,57 @@
 
 #include "BinaryTree.h"
 #include <deque>
+#include <random>
 
 tree* create_rand_tree(const int count, const int min, const int max)
 {
-	srand(static_cast<unsigned int>(time(nullptr)));
+	std::random_device random_device;
+	std::mt19937 generator(random_device());
+	const std::uniform_int_distribution<int> uniform_int_distribution(min, max);
+
 	const auto root = new_tree_node(rand() % (max - min + 1) + min);
 	for (auto i = 0; i < count - 1; i++)
 	{
-		const auto new_val = rand() % (max - min + 1) + min;
+		const auto new_val = uniform_int_distribution(generator);
 		if (look_up(root, new_val) == nullptr)
+		{
 			insert_tree_node(root, new_val);
+		}
 		else
+		{
 			i--;
+		}
 	}
 	return root;
 }
 
 tree* look_up(struct tree* node, const int key)
 {
-	if (node == nullptr) return node;
-
-	if (node->data == key) return node;
+	if (node == nullptr)
+	{
+		return node;
+	}
+	if (node->data == key)
+	{
+		return node;
+	}
 	if (node->data < key)
+	{
 		return look_up(node->right, key);
+	}
 	return look_up(node->left, key);
 }
 
 tree* left_most(struct tree* node)
 {
-	if (node == nullptr) return nullptr;
+	if (node == nullptr)
+	{
+		return nullptr;
+	}
 	while (node->left != nullptr)
+	{
 		node = node->left;
+	}
 	return node;
 }
 
@@ -74,12 +94,17 @@ struct tree* insert_tree_node(struct tree* node, const int data)
 void is_bst(struct tree* node)
 {
 	static auto last_data = INT_MIN;
-	if (node == nullptr) return;
+	if (node == nullptr)
+	{
+		return;
+	}
 
 	is_bst(node->left);
 
 	if (last_data < node->data)
+	{
 		last_data = node->data;
+	}
 	else
 	{
 		std::cout << "Not a BST" << std::endl;
@@ -90,14 +115,19 @@ void is_bst(struct tree* node)
 
 int tree_size(struct tree* node)
 {
-	if (node == nullptr) return 0;
+	if (node == nullptr)
+	{
+		return 0;
+	}
 	return tree_size(node->left) + 1 + tree_size(node->right);
 }
 
 int max_depth(struct tree* node)
 {
 	if (node == nullptr || (node->left == nullptr && node->right == nullptr))
+	{
 		return 0;
+	}
 
 	const auto left_depth = max_depth(node->left);
 	const auto right_depth = max_depth(node->right);
@@ -108,7 +138,9 @@ int max_depth(struct tree* node)
 int min_depth(struct tree* node)
 {
 	if (node == nullptr || (node->left == nullptr && node->right == nullptr))
+	{
 		return 0;
+	}
 
 	const auto left_depth = min_depth(node->left);
 	const auto right_depth = min_depth(node->right);
@@ -123,22 +155,33 @@ bool is_balanced(struct tree* node)
 
 tree* min_tree(struct tree* node)
 {
-	if (node == nullptr) return nullptr;
+	if (node == nullptr)
+	{
+		return nullptr;
+	}
 	while (node->left)
+	{
 		node = node->left;
+	}
 	return node;
 }
 
 tree* max_tree(struct tree* node)
 {
 	while (node->right)
+	{
 		node = node->right;
+	}
+
 	return node;
 }
 
 tree* successor_in_order(struct tree* node)
 {
-	if (node->right != nullptr) return min_tree(node->right);
+	if (node->right != nullptr)
+	{
+		return min_tree(node->right);
+	}
 
 	auto y = node->parent;
 	while (y != nullptr && node == y->right)
@@ -151,7 +194,10 @@ tree* successor_in_order(struct tree* node)
 
 tree* predecessor_in_order(struct tree* node)
 {
-	if (node->left != nullptr) return max_tree(node->left);
+	if (node->left != nullptr)
+	{
+		return max_tree(node->left);
+	}
 
 	auto y = node->parent;
 	while (y != nullptr && node == y->left)
@@ -164,7 +210,10 @@ tree* predecessor_in_order(struct tree* node)
 
 void reverse_order_print(struct tree* node)
 {
-	if (node == nullptr) return;
+	if (node == nullptr)
+	{
+		return;
+	}
 	if (node->left == nullptr && node->right == nullptr)
 	{
 		std::cout << node->data << " ";
@@ -178,15 +227,21 @@ void reverse_order_print(struct tree* node)
 
 tree* lowest_common_ancestor(tree* node, tree* p, tree* q)
 {
-	if (node == nullptr) return nullptr;
-	if (node->left == p || node->left == q
-		|| node->right == p || node->right == q)
+	if (node == nullptr)
+	{
+		return nullptr;
+	}
+	if (node->left == p || node->left == q || node->right == p || node->right == q)
+	{
 		return node;
+	}
 
 	auto left = lowest_common_ancestor(node->left, p, q);
 	auto right = lowest_common_ancestor(node->right, p, q);
 	if (left && right)
+	{
 		return node;
+	}
 	return (left) ? left : right;
 }
 
@@ -202,7 +257,10 @@ void clear(struct tree* node)
 
 void print_tree_in_order(struct tree* node)
 {
-	if (node == nullptr) return;
+	if (node == nullptr)
+	{
+		return;
+	}
 
 	print_tree_in_order(node->left);
 	std::cout << node->data << " ";
@@ -211,7 +269,10 @@ void print_tree_in_order(struct tree* node)
 
 void print_tree_post_order(struct tree* node)
 {
-	if (node == nullptr) return;
+	if (node == nullptr)
+	{
+		return;
+	}
 
 	print_tree_post_order(node->left);
 	print_tree_post_order(node->right);
@@ -220,7 +281,10 @@ void print_tree_post_order(struct tree* node)
 
 void print_tree_pre_order(struct tree* node)
 {
-	if (node == nullptr) return;
+	if (node == nullptr)
+	{
+		return;
+	}
 
 	std::cout << node->data << " ";
 	print_tree_pre_order(node->left);
@@ -229,7 +293,10 @@ void print_tree_pre_order(struct tree* node)
 
 void print_tree_reverse_order(struct tree* node)
 {
-	if (node == nullptr) return;
+	if (node == nullptr)
+	{
+		return;
+	}
 	if (node->left == nullptr && node->right == nullptr)
 	{
 		std::cout << node->data << " ";
@@ -243,7 +310,11 @@ void print_tree_reverse_order(struct tree* node)
 
 void path_finder(struct tree* node, int path[], const int level)
 {
-	if (node == nullptr) return;
+	if (node == nullptr)
+	{
+		return;
+	}
+
 	if (node->left == nullptr && node->right == nullptr)
 	{
 		path[level] = node->data;
@@ -259,56 +330,76 @@ void path_finder(struct tree* node, int path[], const int level)
 	path_finder(node->right, path, level + 1);
 }
 
-bool match_tree(tree* r1, tree* r2)
+bool match_tree(tree* root1, tree* root2)
 {
-	if (r1 == nullptr && r2 == nullptr)
+	if (root1 == nullptr && root2 == nullptr)
+	{
 		return true;
-	if (r1 == nullptr || r2 == nullptr)
+	}
+	if (root1 == nullptr || root2 == nullptr)
+	{
 		return false;
-	if (r1->data != r2->data)
+	}
+	if (root1->data != root2->data)
+	{
 		return false;
-	return (match_tree(r1->left, r2->left) &&
-		match_tree(r1->right, r2->right));
+	}
+	return (match_tree(root1->left, root2->left) &&
+		match_tree(root1->right, root2->right));
 }
 
-bool sub_tree(tree* r1, tree* r2)
+bool sub_tree(tree* root1, tree* root2)
 {
-	if (r1 == nullptr)
+	if (root1 == nullptr)
+	{
 		return false;
-	if (r1->data == r2->data)
-		if (match_tree(r1, r2)) return true;
-	return
-		(sub_tree(r1->left, r2) || sub_tree(r1->right, r2));
+	}
+	if (root1->data == root2->data)
+	{
+		if (match_tree(root1, root2))
+		{
+			return true;
+		}
+	}
+	return (sub_tree(root1->left, root2) || sub_tree(root1->right, root2));
 }
 
-bool is_sub_tree(tree* r1, tree* r2)
+bool is_sub_tree(tree* root1, tree* root2)
 {
-	if (r2 == nullptr)
+	if (root2 == nullptr)
+	{
 		return true;
-	return sub_tree(r1, r2);
+	}
+	return sub_tree(root1, root2);
 }
 
-void mirror(tree* r)
+void mirror(tree* root)
 {
-	if (r == nullptr) return;
+	if (root == nullptr)
+	{
+		return;
+	}
 
-	mirror(r->left);
-	mirror(r->right);
+	mirror(root->left);
+	mirror(root->right);
 
-	const auto tmp = r->right;
-	r->right = r->left;
-	r->left = tmp;
+	const auto tmp = root->right;
+	root->right = root->left;
+	root->left = tmp;
 }
 
-tree* add_to_bst(int arr[], int start, int end)
+tree* add_to_bst(int array[], const int start, const int end)
 {
-	if (end < start) return nullptr;
+	if (end < start)
+	{
+		return nullptr;
+	}
 	const auto mid = (start + end) / 2;
 
 	const auto r = new tree;
-	r->data = arr[mid];
-	r->left = add_to_bst(arr, start, mid - 1);
-	r->right = add_to_bst(arr, mid + 1, end);
+	r->data = array[mid];
+	r->left = add_to_bst(array, start, mid - 1);
+	r->right = add_to_bst(array, mid + 1, end);
 	return r;
 }
 
@@ -319,7 +410,10 @@ tree* create_minimal_bst(int arr[], const int size)
 
 void breadth_first_traversal(tree* root)
 {
-	if (root == nullptr) return;
+	if (root == nullptr)
+	{
+		return;
+	}
 	std::deque<tree *> queue;
 	queue.push_back(root);
 
@@ -330,103 +424,104 @@ void breadth_first_traversal(tree* root)
 		queue.pop_front();
 
 		if (p->left != nullptr)
+		{
 			queue.push_back(p->left);
+		}
 		if (p->right != nullptr)
+		{
 			queue.push_back(p->right);
+		}
 	}
 	std::cout << std::endl;
 }
 
-int get_level(struct tree* node, int elm, int level)
+int get_level(struct tree* node, const int element, const int level)
 {
-	if (node == nullptr) return 0;
-	if (elm == node->data)
+	if (node == nullptr)
+	{
+		return 0;
+	}
+	if (element == node->data)
+	{
 		return level;
-	if (elm < node->data)
-		return get_level(node->left, elm, level + 1);
-	return get_level(node->right, elm, level + 1);
+	}
+	if (element < node->data)
+	{
+		return get_level(node->left, element, level + 1);
+	}
+	return get_level(node->right, element, level + 1);
 }
 
-void breadth_first_level_element_print(struct tree* root, std::vector<std::vector<int>>& v)
+void breadth_first_level_element_print(struct tree* root, std::vector<std::vector<int>>& vec)
 {
-	if (root == nullptr) return;
+	if (root == nullptr)
+	{
+		return;
+	}
 	std::deque<tree *> q;
 	q.push_back(root);
 	while (!q.empty())
 	{
 		const auto p = q.front();
 		const auto lev = get_level(root, p->data, 0);
-		v[lev].push_back(p->data);
+		vec[lev].push_back(p->data);
 		q.pop_front();
 		if (p->left) q.push_back(p->left);
 		if (p->right)q.push_back(p->right);
 	}
 }
 
-void level_print(struct tree* node, std::vector<std::vector<int>>& elm, int level)
-{
-	if (node == nullptr) return;
-	if (node->left == nullptr && node->right == nullptr)
-	{
-		elm[level].push_back(node->data);
-		return;
-	}
-	elm[level++].push_back(node->data);
-	level_print(node->left, elm, level);
-	level_print(node->right, elm, level);
-}
-
-void nth_max(struct tree* t)
-{
-	static auto n_th_max = 5;
-	static auto num = 0;
-	if (t == nullptr) return;
-	nth_max(t->right);
-	num++;
-	if (num == n_th_max)
-		std::cout << n_th_max << "-th maximum value is "
-			<< t->data << std::endl;
-	nth_max(t->left);
-}
-
-void tree_to_array(struct tree* node, int a[])
+void tree_to_array(struct tree* node, int array[])
 {
 	static auto pos = 0;
 
 	if (node)
 	{
-		tree_to_array(node->left, a);
-		a[pos++] = node->data;
-		tree_to_array(node->right, a);
+		tree_to_array(node->left, array);
+		array[pos++] = node->data;
+		tree_to_array(node->right, array);
 	}
 }
 
 void level_even_odd(struct tree* node)
 {
-	std::vector<int> even_vec;
-	std::vector<int> odd_vec;
-	if (node == nullptr) return;
-	std::deque<struct tree*> que;
-	que.push_back(node);
-
-	while (!que.empty())
+	if (node == nullptr)
 	{
-		const auto p = que.front();
-		const auto level = get_level(node, p->data, 0);
-		if (level % 2 == 0)
-			even_vec.push_back(p->data);
-		else
-			odd_vec.push_back(p->data);
-		que.pop_front();
-		if (p->left) que.push_back(p->left);
-		if (p->right) que.push_back(p->right);
+		return;
 	}
 
-	std::cout << "even level elements : ";
+	std::vector<int> even_vec;
+	std::vector<int> odd_vec;
+	std::deque<struct tree*> queue;
+	queue.push_back(node);
+
+	while (!queue.empty())
+	{
+		const auto p = queue.front();
+		const auto level = get_level(node, p->data, 0);
+		if (level % 2 == 0)
+		{
+			even_vec.push_back(p->data);
+		}
+		else
+		{
+			odd_vec.push_back(p->data);
+		}
+		queue.pop_front();
+		if (p->left) queue.push_back(p->left);
+		if (p->right) queue.push_back(p->right);
+	}
+
+	std::cout << "Even level elements : ";
 	for (auto i : even_vec)
+	{
 		std::cout << i << " ";
-	std::cout << std::endl << "odd level elements : ";
+	}
+
+	std::cout << std::endl << "Odd level elements : ";
 	for (auto i : odd_vec)
+	{
 		std::cout << i << " ";
+	}
 	std::cout << std::endl;
 }

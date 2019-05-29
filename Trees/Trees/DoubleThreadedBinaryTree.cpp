@@ -6,7 +6,7 @@
 
 double_threaded_binary_tree::double_threaded_binary_tree()
 {
-	head_ = new dt_tree;
+	head_ = new double_threaded_tree;
 	head_->value = 0;
 	head_->l_tag = 0;
 	head_->r_tag = 0;
@@ -60,7 +60,7 @@ void double_threaded_binary_tree::unique_random_number_insert(const int count, c
 
 void double_threaded_binary_tree::insert(const int data)
 {
-	const auto new_item = new dt_tree;
+	const auto new_item = new double_threaded_tree;
 	new_item->value = data;
 	if (head_ == head_->left && head_ == head_->right)
 	{
@@ -144,7 +144,7 @@ bool double_threaded_binary_tree::find_val(const int data) const
 	}
 }
 
-void double_threaded_binary_tree::print_in_order()
+void double_threaded_binary_tree::print_in_order() const
 {
 	auto current = head_->left;
 	while (current->l_tag == 1)
@@ -176,7 +176,7 @@ void double_threaded_binary_tree::print_pre_order()
 	auto current = head_;
 	do
 	{
-		current = find_next_pre_order(current);		
+		current = find_next_pre_order(current);
 		std::cout << current->value << " ";
 	}
 	while (current != head_ && !head_visited_);
@@ -185,11 +185,12 @@ void double_threaded_binary_tree::print_pre_order()
 	head_visited_ = false;
 }
 
-void double_threaded_binary_tree::print_post_order()
+void double_threaded_binary_tree::print_post_order() const
 {
 }
 
-double_threaded_binary_tree::dt_tree* double_threaded_binary_tree::find_next_in_order(dt_tree* current)
+double_threaded_binary_tree::double_threaded_tree* double_threaded_binary_tree::find_next_in_order(
+	double_threaded_tree* current)
 {
 	if (current->r_tag == 0)
 	{
@@ -203,7 +204,8 @@ double_threaded_binary_tree::dt_tree* double_threaded_binary_tree::find_next_in_
 	return current;
 }
 
-double_threaded_binary_tree::dt_tree* double_threaded_binary_tree::find_next_pre_order(dt_tree* current)
+double_threaded_binary_tree::double_threaded_tree* double_threaded_binary_tree::find_next_pre_order(
+	double_threaded_tree* current)
 {
 	if (current->l_tag == 1)
 	{
@@ -222,13 +224,14 @@ double_threaded_binary_tree::dt_tree* double_threaded_binary_tree::find_next_pre
 	current = current->right;
 	if (current->r_tag == 1)
 	{
-		current = current->right;	
+		current = current->right;
 	}
 
 	return current;
 }
 
-double_threaded_binary_tree::dt_tree* double_threaded_binary_tree::find_next_post_order(dt_tree* current)
+double_threaded_binary_tree::double_threaded_tree* double_threaded_binary_tree::find_next_post_order(
+	double_threaded_tree* current)
 {
 	return current;
 }

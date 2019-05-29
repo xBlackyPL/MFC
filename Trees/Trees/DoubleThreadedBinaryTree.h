@@ -3,11 +3,11 @@
 class double_threaded_binary_tree
 {
 public:
-	struct dt_tree
+	struct double_threaded_tree
 	{
 		int value;
-		dt_tree* left;
-		dt_tree* right;
+		double_threaded_tree* left;
+		double_threaded_tree* right;
 		unsigned l_tag : 1;
 		unsigned r_tag : 1;
 	};
@@ -30,21 +30,21 @@ public:
 
 	bool find_val(int) const;
 
-	void print_in_order();
+	void print_in_order() const;
 
 	void print_pre_order();
 
-	void print_post_order();
+	void print_post_order() const;
 
-	dt_tree* find_next_in_order(dt_tree*);
+	static double_threaded_tree* find_next_in_order(double_threaded_tree*);
 
-	dt_tree* find_next_pre_order(dt_tree*);
+	double_threaded_tree* find_next_pre_order(double_threaded_tree*);
 
-	dt_tree* find_next_post_order(dt_tree*);
+	static double_threaded_tree* find_next_post_order(double_threaded_tree*);
 
 private:
 	bool head_visited_ = false;
-	dt_tree* head_;
+	double_threaded_tree* head_;
 	bool direction_left_{};
 	bool direction_right_{};
 };
