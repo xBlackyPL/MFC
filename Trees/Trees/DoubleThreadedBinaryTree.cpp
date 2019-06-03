@@ -187,6 +187,12 @@ void double_threaded_binary_tree::print_pre_order()
 
 void double_threaded_binary_tree::print_post_order() const
 {
+	auto current = head_;
+	do {
+		current = find_next_post_order(current);
+		std::cout << current->value << " ";
+	} while (current != head_);
+	std::cout << std::endl;
 }
 
 double_threaded_binary_tree::double_threaded_tree* double_threaded_binary_tree::find_next_in_order(
@@ -212,15 +218,6 @@ double_threaded_binary_tree::double_threaded_tree* double_threaded_binary_tree::
 		return current->left;
 	}
 
-	if (current == head_)
-	{
-		if (head_visited_)
-		{
-			return current;
-		}
-		head_visited_ = true;
-	}
-
 	current = current->right;
 	if (current->r_tag == 1)
 	{
@@ -233,5 +230,60 @@ double_threaded_binary_tree::double_threaded_tree* double_threaded_binary_tree::
 double_threaded_binary_tree::double_threaded_tree* double_threaded_binary_tree::find_next_post_order(
 	double_threaded_tree* current)
 {
+	if (current->r_tag == 1)
+	{
+		return current->right;
+	}
+
+	current = current->right;
+	if (current->l_tag == 1)
+	{
+		current = current->left;
+	}
+
+	return current;
+}
+
+double_threaded_binary_tree::double_threaded_tree* double_threaded_binary_tree::in_successor(double_threaded_tree* current)
+{
+	if (current->r_tag == 0)
+	{
+		return current->right;
+	}
+	if (current->r_tag == 1)
+	{
+		while (current->l_tag == 1)
+		{
+			current = current->left;
+		}
+	}
+	return current;
+}
+
+double_threaded_binary_tree::double_threaded_tree* double_threaded_binary_tree::pre_successor(double_threaded_tree* current)
+{
+	if (current->l_tag == 1)
+	{
+		return current->left;
+	}
+
+	while (current->r_tag == 1)
+	{
+		current = current->right;
+	}
+	return current;
+}
+
+double_threaded_binary_tree::double_threaded_tree* double_threaded_binary_tree::post_successor(double_threaded_tree* current)
+{
+	if (current->r_tag == 1)
+	{
+		return current->left;
+	}
+
+	while (current->l_tag == 1)
+	{
+		current = current->right;
+	}
 	return current;
 }

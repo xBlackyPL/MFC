@@ -38,9 +38,16 @@ public:
 
 	static double_threaded_tree* find_next_in_order(double_threaded_tree*);
 
-	double_threaded_tree* find_next_pre_order(double_threaded_tree*);
+	static double_threaded_tree* find_next_pre_order(double_threaded_tree*);
 
 	static double_threaded_tree* find_next_post_order(double_threaded_tree*);
+
+	static double_threaded_tree* in_successor(double_threaded_tree*);
+
+	static double_threaded_tree* pre_successor(double_threaded_tree*);
+
+	static double_threaded_tree* post_successor(double_threaded_tree*);
+
 
 private:
 	bool head_visited_ = false;
